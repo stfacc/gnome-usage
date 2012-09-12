@@ -13,10 +13,16 @@ INCLUDES = \
 bin_PROGRAMS = gnome-usage
 
 gnome_usage_SOURCES = \
-	config.vapi		\
-	main.vala		\
-	usage-application.vala	\
-	usage-window.vala	\
+	config.vapi			\
+	main.vala			\
+	usage-application.vala		\
+	usage-window.vala		\
+	usage-topbar.vala		\
+	usage-view.vala			\
+	usage-cpu-view.vala		\
+	usage-memory-view.vala		\
+	usage-storage-view.vala		\
+	usage-battery-view.vala		\
 	$(NULL)
 
 gnome_usage_VALAFLAGS = \
