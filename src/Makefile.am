@@ -12,8 +12,7 @@ INCLUDES = \
 
 bin_PROGRAMS = gnome-usage
 
-gnome_usage_SOURCES = \
-	config.vapi			\
+VALA_SOURCES = \
 	main.vala			\
 	usage-application.vala		\
 	usage-window.vala		\
@@ -25,8 +24,17 @@ gnome_usage_SOURCES = \
 	usage-battery-view.vala		\
 	$(NULL)
 
+gnome_usage_SOURCES = \
+	config.vapi			\
+	egglistbox.vapi			\
+	glibtop.vapi			\
+	egg-list-box.c			\
+	$(VALA_SOURCES)		\
+	$(NULL)
+
 gnome_usage_VALAFLAGS = \
 	--pkg gtk+-3.0	\
+	--pkg posix	\
 	$(NULL)
 
 AM_CFLAGS = \
@@ -37,6 +45,6 @@ gnome_usage_LDADD = \
 	$(USAGE_LIBS)			\
 	$(NULL)
 
-MAINTAINERCLEANFILES += $(gnome_usage_SOURCES:.vala=.c)
+MAINTAINERCLEANFILES += $(VALA_SOURCES:.vala=.c)
 
 -include $(top_srcdir)/git.mk

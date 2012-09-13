@@ -45,6 +45,7 @@ YELP_HELP_INIT
 
 PKG_CHECK_MODULES(USAGE, [
     gtk+-3.0 >= 3.5.9
+    libgtop-2.0
 ])
 
 AC_CONFIG_FILES([
