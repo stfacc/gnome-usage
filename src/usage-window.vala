@@ -37,6 +37,10 @@ namespace Usage {
             content.add (new Usage.Topbar (this));
 
             var notebook = new Gtk.Notebook () { show_tabs = false, vexpand = true };
+            var style_context = notebook.get_style_context ();
+            style_context.add_class (Gtk.STYLE_CLASS_VIEW);
+            style_context.add_class ("content-view");
+
             foreach (var view in UIView.all ()) {
                 notebook.append_page (views[view].content);
             };

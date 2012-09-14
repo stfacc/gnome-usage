@@ -43,6 +43,8 @@ namespace Usage {
 
             var tb = new Gtk.Toolbar () { hexpand = true };
             tb.get_style_context ().add_class (Gtk.STYLE_CLASS_MENUBAR);
+            /* Steal style from baobab for now */
+            tb.get_style_context ().add_class ("baobab-toolbar");
             notebook.append_page (tb);
 
             var left_item = new Gtk.ToolItem ();
