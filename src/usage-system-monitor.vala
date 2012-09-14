@@ -14,6 +14,8 @@ namespace Usage {
 
     public class SystemMonitor {
         public double cpu_load { get; private set; }
+        public double mem_usage { get; private set; }
+        public double swap_usage { get; private set; }
 
         uint64 cpu_last_used = 0;
         uint64 cpu_last_total = 0;
@@ -69,6 +71,16 @@ namespace Usage {
 
                 cpu_last_used = used;
                 cpu_last_total = cpu_data.total;
+
+                /* Memory */
+                GTop.Mem mem;
+                GTop.get_mem (out mem);
+                mem_usage = ((double) (mem.used - mem.buffer - mem.cached)) / mem.total;
+
+                /* Swap */
+                GTop.Swap swap;
+                GTop.get_swap (out swap);
+                swap_usage = (double) swap.used / swap.total;
 
                 return true;
             });

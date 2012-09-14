@@ -74,4 +74,29 @@ namespace GTop {
         uint64 xcpu_stime[32];
     }
     public void get_proc_time (out ProcTime proc_time, uint pid);
+
+    [CCode (cname = "glibtop_mem", cheader_filename = "glibtop/mem.h")]
+    public struct Mem {
+        uint64 flags;
+        uint64 total;
+        uint64 used;
+        uint64 free;
+        uint64 shared;
+        uint64 buffer;
+        uint64 cached;
+        uint64 user;
+        uint64 locked;
+    }
+    public void get_mem (out Mem mem);
+
+    [CCode (cname = "glibtop_swap", cheader_filename = "glibtop/swap.h")]
+    public struct Swap {
+        uint64 flags;
+        uint64 total;
+        uint64 used;
+        uint64 free;
+        uint64 pagein;
+        uint64 pageout;
+    }
+    public void get_swap (out Swap swap);
 }
