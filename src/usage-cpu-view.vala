@@ -2,46 +2,6 @@
 
 namespace Usage {
 
-    public class ProcessWidget : Gtk.Grid {
-        static Gtk.SizeGroup name_size_group = null;
-        static Gtk.SizeGroup percent_size_group = null;
-
-        void ensure_size_groups () {
-            if (name_size_group == null) {
-                name_size_group = new Gtk.SizeGroup (Gtk.SizeGroupMode.HORIZONTAL);
-                percent_size_group = new Gtk.SizeGroup (Gtk.SizeGroupMode.HORIZONTAL);
-            }
-        }
-
-        public ProcessWidget (string cmdline, double load) {
-            orientation = Gtk.Orientation.HORIZONTAL;
-
-            ensure_size_groups ();
-
-            var label = new Gtk.Label (cmdline) {
-                halign = Gtk.Align.START
-            };
-            name_size_group.add_widget (label);
-            add (label);
-
-            var progress = new Gtk.ProgressBar () {
-                fraction = load,
-                hexpand = true
-            };
-            add (progress);
-
-            label = new Gtk.Label ("%d%%".printf ((int) (100 * load))) {
-                margin_right = 20,
-                margin_left = 20,
-                halign = Gtk.Align.START
-            };
-            percent_size_group.add_widget (label);
-            add (label);
-
-            show_all ();
-        }
-    }
-
     public class CPUView : View {
 
         public CPUView () {
@@ -91,7 +51,7 @@ namespace Usage {
                 proc_list.foreach ((widget) => { widget.destroy (); });
                 foreach (unowned Process process in monitor.process_table.get_values ()) {
                     var load = process.cpu_load / monitor.cpu_load;
-                    var proc_widget = new ProcessWidget (process.cmdline, load);
+                    var proc_widget = new ElementWidget (this, process.cmdline, load);
                     proc_widget.set_data ("sort_id", (int) (100 * load));
                     proc_list.add (proc_widget);
                 }

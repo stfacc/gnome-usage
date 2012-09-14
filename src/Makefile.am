@@ -23,6 +23,7 @@ VALA_SOURCES = \
 	usage-storage-view.vala		\
 	usage-battery-view.vala		\
 	usage-system-monitor.vala	\
+	usage-element-widget.vala	\
 	$(NULL)
 
 gnome_usage_SOURCES = \
