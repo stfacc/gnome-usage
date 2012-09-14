@@ -38,7 +38,7 @@ namespace Usage {
                 return w.get_data<int>("sort_id") > 0;
             });
 
-            var monitor = new SystemMonitor ();
+            var monitor = ((Application) GLib.Application.get_default ()).monitor;
 
             Timeout.add (200, () => {
                 level_bar.set_value (monitor.cpu_load);
