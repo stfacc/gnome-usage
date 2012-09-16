@@ -7,16 +7,8 @@ namespace Usage {
         public MemoryView () {
             name = "Memory";
 
-            var grid = new Gtk.Grid () {
-                orientation = Gtk.Orientation.VERTICAL,
-                margin_left = 20,
-                margin_right = 20
-            };
-            grid.set_column_spacing (20);
-            content = grid;
-
             var proc_list = new ElementList ();
-            grid.attach (proc_list, 0, 0, 1, 1);
+            content = proc_list;
 
             Timeout.add_seconds (1, () => {
                 proc_list.foreach ((widget) => { widget.destroy (); });

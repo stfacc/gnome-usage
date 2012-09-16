@@ -77,6 +77,8 @@ namespace Usage {
 
         public ElementList () {
             set_separator_funcs (update_separator);
+            margin_left = 50;
+            margin_right = 50;
         }
     }
 }
