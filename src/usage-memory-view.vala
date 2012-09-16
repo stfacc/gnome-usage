@@ -17,7 +17,7 @@ namespace Usage {
             grid.set_column_spacing (20);
             content = grid;
 
-            var proc_list = new Egg.ListBox ();
+            var proc_list = new ElementList ();
             grid.attach (proc_list, 0, 0, 1, 1);
 
             var monitor = ((Application) GLib.Application.get_default ()).monitor;
@@ -25,13 +25,13 @@ namespace Usage {
             Timeout.add_seconds (1, () => {
                 proc_list.foreach ((widget) => { widget.destroy (); });
 
-                proc_list.add (new ElementWidget.for_headline (this, _("Memory"), monitor.mem_usage));
-                proc_list.add (new ElementWidget.for_headline (this, _("Swap"), monitor.swap_usage));
+                proc_list.add (new ElementWidget (this, _("Memory"), monitor.mem_usage, true));
+                proc_list.add (new ElementWidget (this, _("Swap"), monitor.swap_usage, true));
 
                 List<ElementWidget> widget_list = null;
                 foreach (unowned Process process in monitor.process_table.get_values ()) {
                     var mem = (double) process.mem_usage;
-                    var proc_widget = new ElementWidget (this, process.cmdline, mem);
+                    var proc_widget = new ElementWidget (this, process.cmdline, mem, false);
                     proc_widget.set_data ("sort_id", (int) (1000 * mem));
                     widget_list.insert_sorted (proc_widget, (a, b) => {
                         var aa = a.get_data<int>("sort_id");

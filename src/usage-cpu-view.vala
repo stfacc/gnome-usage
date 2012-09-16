@@ -16,7 +16,7 @@ namespace Usage {
             };
             content = grid;
 
-            var proc_list = new Egg.ListBox ();
+            var proc_list = new ElementList ();
             grid.attach (proc_list, 0, 0, 1, 1);
 
             var monitor = ((Application) GLib.Application.get_default ()).monitor;
@@ -24,12 +24,12 @@ namespace Usage {
             Timeout.add_seconds (1, () => {
                 proc_list.foreach ((widget) => { widget.destroy (); });
 
-                proc_list.add (new ElementWidget.for_headline (this, "", monitor.cpu_load));
+                proc_list.add (new ElementWidget (this, "", monitor.cpu_load, true));
 
                 List<ElementWidget> widget_list = null;
                 foreach (unowned Process process in monitor.process_table.get_values ()) {
                     var load = process.cpu_load / monitor.cpu_load;
-                    var proc_widget = new ElementWidget (this, process.cmdline, load);
+                    var proc_widget = new ElementWidget (this, process.cmdline, load, false);
                     proc_widget.set_data ("sort_id", (int) (1000 * load));
                     widget_list.insert_sorted (proc_widget, (a, b) => {
                         var aa = a.get_data<int>("sort_id");
