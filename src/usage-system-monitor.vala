@@ -4,7 +4,7 @@ namespace Usage {
 
     [Compact]
     public class Process {
-        internal int pid;
+        internal uint pid;
         internal string cmdline;
         internal double cpu_load;
         internal uint64 cpu_last_used;
@@ -50,6 +50,7 @@ namespace Usage {
 
                     if (!(pids[i] in process_table)) {
                         var process = new Process ();
+                        process.pid = pids[i];
                         process.alive = true;
                         process.cmdline = (string) proc_state.cmd;
                         process.cpu_load = 0;
