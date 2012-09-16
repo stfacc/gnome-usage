@@ -36,9 +36,11 @@ namespace Usage {
             var label = new Gtk.Label (text) {
                 halign = Gtk.Align.START
             };
-            label.set_size_request (150, -1);
             label.set_ellipsize (Pango.EllipsizeMode.END);
-            add (label);
+            var box = new Gtk.EventBox ();
+            box.set_size_request (150, -1);
+            box.add (label);
+            add (box);
 
             int margin = headline ? 20 : 5;
             var progress = new Gtk.LevelBar () {
@@ -50,12 +52,12 @@ namespace Usage {
             add (progress);
 
             label = new Gtk.Label ("%d%%".printf ((int) (100 * load))) {
-                margin_right = 20,
-                margin_left = 20,
-                halign = Gtk.Align.START
+                halign = Gtk.Align.END
             };
-            label.set_size_request (50, -1);
-            add (label);
+            box = new Gtk.EventBox ();
+            box.set_size_request (50, -1);
+            box.add (label);
+            add (box);
 
             show_all ();
         }
