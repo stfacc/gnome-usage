@@ -8,6 +8,7 @@ namespace Usage {
         internal string cmdline;
         internal double cpu_load;
         internal uint64 cpu_last_used;
+        internal double mem_usage;
 
         internal bool alive;
     }
@@ -29,11 +30,21 @@ namespace Usage {
             process_table = new HashTable<uint, Process> (direct_hash, direct_equal);
 
             Timeout.add (UPDATE_INTERVAL, () => {
+                /* CPU */
                 GTop.Cpu cpu_data;
                 GTop.get_cpu (out cpu_data);
                 var used = cpu_data.user + cpu_data.nice + cpu_data.sys;
-
                 cpu_load = ((double) (used - cpu_last_used)) / (cpu_data.total - cpu_last_total);
+
+               /* Memory */
+                GTop.Mem mem;
+                GTop.get_mem (out mem);
+                mem_usage = ((double) (mem.used - mem.buffer - mem.cached)) / mem.total;
+
+                /* Swap */
+                GTop.Swap swap;
+                GTop.get_swap (out swap);
+                swap_usage = (double) swap.used / swap.total;
 
                 foreach (unowned Process process in process_table.get_values ()) {
                     process.alive = false;
@@ -55,12 +66,17 @@ namespace Usage {
                         process.cmdline = (string) proc_state.cmd;
                         process.cpu_load = 0;
                         process.cpu_last_used = proc_time.rtime;
+                        process.mem_usage = 0;
                         process_table.insert (pids[i], (owned) process);
                     } else {
                         unowned Process process = process_table[pids[i]];
                         process.cpu_load = ((double) (proc_time.rtime - process.cpu_last_used)) / (cpu_data.total - cpu_last_total);
                         process.alive = true;
                         process.cpu_last_used = proc_time.rtime;
+
+                        GTop.ProcMem proc_mem;
+                        GTop.get_proc_mem (out proc_mem, process.pid);
+                        process.mem_usage = (double) proc_mem.resident / mem.total;
                     }
                 }
 
@@ -72,16 +88,6 @@ namespace Usage {
 
                 cpu_last_used = used;
                 cpu_last_total = cpu_data.total;
-
-                /* Memory */
-                GTop.Mem mem;
-                GTop.get_mem (out mem);
-                mem_usage = ((double) (mem.used - mem.buffer - mem.cached)) / mem.total;
-
-                /* Swap */
-                GTop.Swap swap;
-                GTop.get_swap (out swap);
-                swap_usage = (double) swap.used / swap.total;
 
                 return true;
             });

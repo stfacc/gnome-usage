@@ -27,19 +27,51 @@ namespace Usage {
             return size_groups_table[name];
         }
 
-        public ElementWidget (Usage.View view, string cmdline, double load) {
+        public ElementWidget (Usage.View view, string text, double load) {
             orientation = Gtk.Orientation.HORIZONTAL;
 
             unowned SizeGroups size_groups = get_size_groups (view.name);
 
-            var label = new Gtk.Label (cmdline) {
+            var label = new Gtk.Label (text) {
                 halign = Gtk.Align.START
             };
             size_groups.name.add_widget (label);
             add (label);
 
-            var progress = new Gtk.ProgressBar () {
-                fraction = load,
+            var progress = new Gtk.LevelBar () {
+                value = load,
+                margin_top = 5,
+                margin_bottom = 5,
+                hexpand = true
+            };
+            add (progress);
+
+            label = new Gtk.Label ("%d%%".printf ((int) (100 * load))) {
+                margin_right = 20,
+                margin_left = 20,
+                halign = Gtk.Align.START
+            };
+            size_groups.percent.add_widget (label);
+            add (label);
+
+            show_all ();
+        }
+
+        public ElementWidget.for_headline (Usage.View view, string text, double load) {
+            orientation = Gtk.Orientation.HORIZONTAL;
+
+            unowned SizeGroups size_groups = get_size_groups (view.name);
+
+            var label = new Gtk.Label (text) {
+                halign = Gtk.Align.START
+            };
+            size_groups.name.add_widget (label);
+            add (label);
+
+            var progress = new Gtk.LevelBar () {
+                value = load,
+                margin_top = 20,
+                margin_bottom = 20,
                 hexpand = true
             };
             add (progress);

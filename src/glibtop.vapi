@@ -99,4 +99,16 @@ namespace GTop {
         uint64 pageout;
     }
     public void get_swap (out Swap swap);
+
+    [CCode (cname = "glibtop_proc_mem", cheader_filename = "glibtop/procmem.h")]
+    public struct ProcMem {
+        uint64 flags;
+        uint64 size;
+        uint64 vsize;
+        uint64 resident;
+        uint64 share;
+        uint64 rss;
+        uint64 rss_rlim;
+    }
+    public void get_proc_mem (out ProcMem proc_mem, uint pid);
 }
