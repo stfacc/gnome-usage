@@ -3,10 +3,22 @@
 namespace Usage {
 
     public abstract class View {
+
+        protected const int MAX_NUM_ELEMENTS = 6;
+
         public string name { get; protected set; }
+
         public Gtk.Widget content { get; protected set; }
+
         public signal void toggled_mode (Usage.TopbarMode mode);
+
         public Gtk.Widget topbar_detail_content { get; protected set; }
+
+        protected SystemMonitor monitor;
+
+        public View () {
+            monitor = (GLib.Application.get_default () as Application).monitor;
+        }
     }
 }
 

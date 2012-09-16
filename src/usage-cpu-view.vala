@@ -4,8 +4,6 @@ namespace Usage {
 
     public class CPUView : View {
 
-        const int MAX_NUM_ELEMENTS = 6;
-
         public CPUView () {
             name = "CPU";
 
@@ -18,8 +16,6 @@ namespace Usage {
 
             var proc_list = new ElementList ();
             grid.attach (proc_list, 0, 0, 1, 1);
-
-            var monitor = ((Application) GLib.Application.get_default ()).monitor;
 
             Timeout.add_seconds (1, () => {
                 proc_list.foreach ((widget) => { widget.destroy (); });
