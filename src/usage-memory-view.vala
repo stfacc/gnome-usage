@@ -13,8 +13,8 @@ namespace Usage {
             Timeout.add_seconds (1, () => {
                 proc_list.foreach ((widget) => { widget.destroy (); });
 
-                proc_list.add (new ElementWidget (this, _("Memory"), monitor.mem_usage, true));
-                proc_list.add (new ElementWidget (this, _("Swap"), monitor.swap_usage, true));
+                proc_list.add (new ElementWidget (this, _("<b>Memory</b>"), monitor.mem_usage, true));
+                proc_list.add (new ElementWidget (this, _("<b>Swap</b>"), monitor.swap_usage, true));
 
                 List<ElementWidget> widget_list = null;
                 foreach (unowned Process process in monitor.process_table.get_values ()) {

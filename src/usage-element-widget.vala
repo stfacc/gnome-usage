@@ -33,9 +33,10 @@ namespace Usage {
             orientation = Gtk.Orientation.HORIZONTAL;
             is_headline = headline;
 
-            var label = new Gtk.Label (text) {
+            var label = new Gtk.Label (null) {
                 halign = Gtk.Align.START
             };
+            label.set_markup (text);
             label.set_ellipsize (Pango.EllipsizeMode.END);
             var box = new Gtk.EventBox ();
             box.set_size_request (150, -1);
