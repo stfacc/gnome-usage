@@ -33,12 +33,9 @@ namespace Usage {
             orientation = Gtk.Orientation.HORIZONTAL;
             is_headline = headline;
 
-            unowned SizeGroups size_groups = get_size_groups (view.name);
-
             var label = new Gtk.Label (text) {
                 halign = Gtk.Align.START
             };
-
             label.set_size_request (150, -1);
             label.set_ellipsize (Pango.EllipsizeMode.END);
             add (label);
@@ -57,7 +54,7 @@ namespace Usage {
                 margin_left = 20,
                 halign = Gtk.Align.START
             };
-            size_groups.percent.add_widget (label);
+            label.set_size_request (50, -1);
             add (label);
 
             show_all ();
