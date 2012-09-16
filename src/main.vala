@@ -1,4 +1,4 @@
-/* -*- indent-tabs-mode: nil; c-basic-offset: 4 -*- */
+/* -*- tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 
 int main (string[] args) {
     Intl.bindtextdomain (Config.GETTEXT_PACKAGE, Config.GNOMELOCALEDIR);
