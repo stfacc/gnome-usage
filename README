@@ -1,0 +1,20 @@
+GNOME Usage
+===========
+
+A GNOME 3 application that can show the current resource usage of the system.
+
+Goals
+-----
+
+ * Help the user understand what is going on with the system
+ * Help identify problem areas
+ * Display overview of:
+   - Disk space used/available by type of data
+   - Memory used/available
+   - Number of active users
+   - Applications that are actively using CPU
+   - System CPU usage
+   - Network bandwidth
+   - Battery consumption
+ * Allow the user to forcefully close applications
+
