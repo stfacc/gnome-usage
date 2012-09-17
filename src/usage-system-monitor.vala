@@ -22,7 +22,11 @@ namespace Usage {
         uint64 cpu_last_total = 0;
 
         const int UPDATE_INTERVAL = 1000;
-        public HashTable<uint, Process> process_table;
+        HashTable<uint, Process> process_table;
+
+        public List<unowned Process> get_processes () {
+            return process_table.get_values ();
+        }
 
         public SystemMonitor () {
             GTop.init ();

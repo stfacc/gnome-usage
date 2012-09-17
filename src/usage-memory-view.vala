@@ -17,7 +17,7 @@ namespace Usage {
                 proc_list.add (new ElementWidget (this, _("<b>Swap</b>"), monitor.swap_usage, true));
 
                 List<ElementWidget> widget_list = null;
-                foreach (unowned Process process in monitor.process_table.get_values ()) {
+                foreach (unowned Process process in monitor.get_processes ()) {
                     var mem = (double) process.mem_usage;
                     var proc_widget = new ElementWidget (this, process.cmdline, mem, false);
                     proc_widget.set_data ("sort_id", (int) (1000 * mem));
