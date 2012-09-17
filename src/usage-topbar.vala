@@ -13,23 +13,26 @@ namespace Usage {
         string text;
         new Gtk.Label label;
 
+        void update_label () {
+            if (get_active ()) {
+                label.set_markup ("<b>%s</b>".printf (text));
+            } else {
+                label.set_markup (text);
+            }
+        }
+
         public TopbarButton (string text_) {
             Object (group: group_);
             set_mode (false);
             text = text_;
-            label = new Gtk.Label (text);
+            label = new Gtk.Label (null);
             add (label);
             if (group_ == null) {
                 group_ = this;
             }
 
-            toggled.connect (() => {
-                if (get_active ()) {
-                    label.set_markup ("<b>%s</b>".printf (text));
-                } else {
-                    label.set_markup ("%s".printf (text));
-                }
-            });
+            toggled.connect (update_label);
+            update_label ();
         }
     }
 
