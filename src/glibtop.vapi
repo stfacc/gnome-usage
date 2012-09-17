@@ -111,4 +111,12 @@ namespace GTop {
         uint64 rss_rlim;
     }
     public void get_proc_mem (out ProcMem proc_mem, uint pid);
+
+    [CCode (cname = "glibtop_netlist", cheader_filename = "glibtop/netlist.h")]
+    public struct Netlist {
+        uint64 flags;
+        uint32 number;
+    }
+    [CCode (array_length = false, array_null_terminated = false)]
+    public string[] get_netlist (out Netlist netlist);
 }
