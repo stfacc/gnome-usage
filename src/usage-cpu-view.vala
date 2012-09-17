@@ -9,18 +9,40 @@ namespace Usage {
 
             var grid = new Gtk.Grid () {
                 orientation = Gtk.Orientation.VERTICAL,
-                margin_left = 20,
-                margin_right = 20
+                row_spacing = 20,
+                column_spacing = 20,
+                margin = 40
             };
             content = grid;
 
+            var graph = new GraphWidget () { hexpand = true };
+            graph.set_size_request (-1, 150);
+            grid.attach (graph, 0, 0, 1, 1);
+
+            var level_bar = new Gtk.LevelBar () {
+                orientation = Gtk.Orientation.VERTICAL,
+                mode = Gtk.LevelBarMode.DISCRETE,
+                min_value = 0,
+                max_value = 20
+            };
+            level_bar.set_size_request (40, -1);
+
+            level_bar.get_style_context ().add_class ("main-level-bar");
+            grid.attach (level_bar, 1, 0, 1, 1);
+
+            var label = new Gtk.Label (null);
+            grid.attach (label, 1, 1, 1, 1);
+
             var proc_list = new ElementList ();
-            grid.attach (proc_list, 0, 0, 1, 1);
+            grid.attach (proc_list, 0, 2, 2, 1);
 
             Timeout.add_seconds (1, () => {
                 proc_list.foreach ((widget) => { widget.destroy (); });
 
-                proc_list.add (new ElementWidget (this, "", monitor.cpu_load, true));
+                level_bar.set_value ((int) Math.ceil (monitor.cpu_load * 20));
+                label.set_text ("%d%%".printf ((int) (monitor.cpu_load * 100)));
+
+                graph.push (monitor.cpu_load);
 
                 List<ElementWidget> widget_list = null;
                 foreach (unowned Process process in monitor.get_processes ()) {

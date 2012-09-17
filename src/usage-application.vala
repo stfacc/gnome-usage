@@ -15,6 +15,19 @@ namespace Usage {
             window.present ();
         }
 
+        protected override void startup () {
+            base.startup ();
+
+            var provider = new Gtk.CssProvider ();
+            provider.load_from_data (
+"""
+.main-level-bar {
+    -GtkLevelBar-min-block-height: 5;
+}
+""", -1);
+            Gtk.StyleContext.add_provider_for_screen (Gdk.Screen.get_default (), provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
+        }
+
         public Application () {
             Object (application_id: "org.gnome.Usage");
             monitor = new SystemMonitor ();

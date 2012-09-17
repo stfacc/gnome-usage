@@ -9,8 +9,7 @@ namespace Usage {
 
             var grid = new Gtk.Grid () {
                 orientation = Gtk.Orientation.VERTICAL,
-                margin_left = 20,
-                margin_right = 20
+                margin = 40
             };
             grid.set_column_spacing (20);
             content = grid;

@@ -25,6 +25,7 @@ VALA_SOURCES = \
 	usage-battery-view.vala		\
 	usage-system-monitor.vala	\
 	usage-element-widget.vala	\
+	usage-graph-widget.vala		\
 	$(NULL)
 
 gnome_usage_SOURCES = \
@@ -45,6 +46,7 @@ AM_CFLAGS = \
 	$(NULL)
 
 gnome_usage_LDADD = \
+	-lm				\
 	$(USAGE_LIBS)			\
 	$(NULL)
 
