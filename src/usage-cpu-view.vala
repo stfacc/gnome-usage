@@ -5,7 +5,7 @@ namespace Usage {
     public class CPUView : View {
 
         public CPUView () {
-            name = "CPU";
+            name = _("CPU");
 
             var proc_list = new ElementList ();
             content = proc_list;

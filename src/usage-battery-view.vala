@@ -4,7 +4,7 @@ namespace Usage {
 
     public class BatteryView : View {
         public BatteryView () {
-            name = "Battery";
+            name = _("Battery");
             content = new Gtk.Label (name);
         }
     }

@@ -5,7 +5,7 @@ namespace Usage {
     public class MemoryView : View {
 
         public MemoryView () {
-            name = "Memory";
+            name = _("Memory");
 
             var proc_list = new ElementList ();
             content = proc_list;

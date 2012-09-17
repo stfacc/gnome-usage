@@ -4,7 +4,7 @@ namespace Usage {
 
     public class StorageView : View {
         public StorageView () {
-            name = "Storage";
+            name = _("Storage");
             content = new Gtk.Label (name);
         }
     }
