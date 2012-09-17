@@ -6,11 +6,12 @@ namespace Usage {
         CPU,
         MEMORY,
         STORAGE,
+        NETWORK,
         BATTERY,
         N_VIEWS;
 
         public static UIView[] all () {
-            return { CPU, MEMORY, STORAGE, BATTERY };
+            return { CPU, MEMORY, STORAGE, NETWORK, BATTERY };
         }
     }
 
@@ -31,6 +32,7 @@ namespace Usage {
             views[UIView.CPU]     = new CPUView ();
             views[UIView.MEMORY]  = new MemoryView ();
             views[UIView.STORAGE] = new StorageView ();
+            views[UIView.NETWORK] = new NetworkView ();
             views[UIView.BATTERY] = new BatteryView ();
 
             var content = new Gtk.Grid () { orientation = Gtk.Orientation.VERTICAL };

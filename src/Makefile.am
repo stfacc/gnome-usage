@@ -21,6 +21,7 @@ VALA_SOURCES = \
 	usage-cpu-view.vala		\
 	usage-memory-view.vala		\
 	usage-storage-view.vala		\
+	usage-network-view.vala		\
 	usage-battery-view.vala		\
 	usage-system-monitor.vala	\
 	usage-element-widget.vala	\
