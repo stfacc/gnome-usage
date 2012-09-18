@@ -19,15 +19,7 @@ namespace Usage {
             graph.set_size_request (-1, 150);
             grid.attach (graph, 0, 0, 1, 1);
 
-            var level_bar = new Gtk.LevelBar () {
-                orientation = Gtk.Orientation.VERTICAL,
-                mode = Gtk.LevelBarMode.DISCRETE,
-                min_value = 0,
-                max_value = 20
-            };
-            level_bar.set_size_request (40, -1);
-
-            level_bar.get_style_context ().add_class ("main-level-bar");
+            var level_bar = new MainLevelBar ();
             grid.attach (level_bar, 1, 0, 1, 1);
 
             var label = new Gtk.Label (null);
@@ -39,7 +31,7 @@ namespace Usage {
             Timeout.add_seconds (1, () => {
                 proc_list.foreach ((widget) => { widget.destroy (); });
 
-                level_bar.set_value ((int) Math.ceil (monitor.cpu_load * 20));
+                level_bar.set_value ((int) Math.ceil (monitor.cpu_load * level_bar.NUM_LEVELS));
                 label.set_text ("%d%%".printf ((int) (monitor.cpu_load * 100)));
 
                 graph.push (monitor.cpu_load);

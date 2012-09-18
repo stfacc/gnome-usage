@@ -26,10 +26,12 @@ VALA_SOURCES = \
 	usage-system-monitor.vala	\
 	usage-element-widget.vala	\
 	usage-graph-widget.vala		\
+	usage-widgets.vala		\
 	$(NULL)
 
 gnome_usage_SOURCES = \
 	config.vapi			\
+	fixes.vapi			\
 	egglistbox.vapi			\
 	glibtop.vapi			\
 	egg-list-box.c			\
