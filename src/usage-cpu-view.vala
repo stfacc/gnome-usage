@@ -17,7 +17,16 @@ namespace Usage {
 
             var graph = new GraphWidget () { hexpand = true };
             graph.set_size_request (-1, 150);
-            grid.attach (graph, 0, 0, 1, 1);
+            var graph_overlay = new Gtk.Overlay ();
+            graph_overlay.add (graph);
+            var graph_label = new Gtk.Label (_("Total CPU load")) {
+                margin = 5,
+                halign = Gtk.Align.START,
+                valign = Gtk.Align.START
+            };
+            graph_label.get_style_context ().add_class ("dim-label");
+            graph_overlay.add_overlay (graph_label);
+            grid.attach (graph_overlay, 0, 0, 1, 1);
 
             var level_bar = new MainLevelBar ();
             grid.attach (level_bar, 1, 0, 1, 1);
