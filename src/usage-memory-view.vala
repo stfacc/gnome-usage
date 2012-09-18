@@ -35,13 +35,9 @@ namespace Usage {
                     });
                 }
 
-                int i = 0;
-                foreach (var widget in widget_list) {
-                    i++;
-                    if (i > MAX_NUM_ELEMENTS || widget.get_data<int> ("sort_id") == 0) {
-                        break;
-                    }
-                    proc_list.add (widget);
+                for (int i = 0; i < MAX_NUM_ELEMENTS; i ++) {
+                    proc_list.add (widget_list.data);
+                    widget_list = (owned) widget_list.next;
                 }
 
                 return true;
