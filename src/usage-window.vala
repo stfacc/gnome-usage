@@ -25,7 +25,7 @@ namespace Usage {
             Object (application: app);
 
             title = _("Usage");
-            set_default_size (800, 500);
+            set_default_size (800, 550);
             hide_titlebar_when_maximized = true;
 
             views = new View[UIView.N_VIEWS];
