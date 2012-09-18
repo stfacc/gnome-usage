@@ -17,6 +17,16 @@ namespace Usage {
         COMPUTER
     }
 
+    enum UpDeviceState {
+        UNKNOWN,
+        CHARGING,
+        DISCHARGING,
+        EMPTY,
+        FULLY_CHARGED,
+        PENDING_CHARGE,
+        PENDING_DISCHARGE
+    }
+
     struct UpDevice {
         string id;
         uint kind;
@@ -77,7 +87,19 @@ namespace Usage {
 
                             level_bar.set_value (device.percentage * level_bar.NUM_LEVELS / 100);
                             percent_label.set_text ("%d%%".printf ((int) device.percentage));
-                            time_label.set_text ("%d:%d hours remaining".printf (hours, minutes));
+                            string timestring;
+                            switch (device.state) {
+                                case UpDeviceState.CHARGING:
+                                    timestring = "%d:%d hours remaining to complete charge".printf (hours, minutes);
+                                    break;
+                                case UpDeviceState.FULLY_CHARGED:
+                                    timestring = "Fully charged";
+                                    break;
+                                default:
+                                    timestring = "%d:%d hours remaining".printf (hours, minutes);
+                                    break;
+                            }
+                            time_label.set_text (timestring);
                             graph.push ((double) device.percentage / 100);
 
                             break;
