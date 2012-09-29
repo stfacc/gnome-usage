@@ -1,7 +1,7 @@
 ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
 NULL =
 
-SUBDIRS = src po
+SUBDIRS = network-analyzer src po
 
 MAINTAINERCLEANFILES = \
 	aclocal.m4		\

@@ -43,6 +43,27 @@ AC_PATH_PROG(GLIB_COMPILE_RESOURCES, glib-compile-resources)
 # Mallard help
 YELP_HELP_INIT
 
+# pcap lib
+LIBPCAP_CONFIG="pcap-config"
+AC_MSG_CHECKING(libpcap)
+if ! $LIBPCAP_CONFIG --libs > /dev/null 2>&1 ; then
+  AC_MSG_ERROR(no)
+else
+  AC_MSG_RESULT(yes)
+  LIBPCAP_LIBS="`$LIBPCAP_CONFIG --libs`"
+  LIBPCAP_CFLAGS="`$LIBPCAP_CONFIG --cflags`"
+fi
+
+AC_SUBST([LIBPCAP_CFLAGS])
+AC_SUBST([LIBPCAP_LIBS])
+
+PKG_CHECK_MODULES(NETWORK_ANALYZER, [
+    glib-2.0
+    gio-2.0
+    libnm-glib
+    libnm-util
+])
+
 PKG_CHECK_MODULES(USAGE, [
     gtk+-3.0 >= 3.5.9
     libgtop-2.0
@@ -50,6 +71,7 @@ PKG_CHECK_MODULES(USAGE, [
 
 AC_CONFIG_FILES([
     Makefile
+    network-analyzer/Makefile
     src/Makefile
     po/Makefile.in
 ])
