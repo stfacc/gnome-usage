@@ -35,6 +35,7 @@ gnome_usage_SOURCES = \
 	egglistbox.vapi			\
 	glibtop.vapi			\
 	egg-list-box.c			\
+	egg-list-box.h			\
 	$(VALA_SOURCES)		\
 	$(NULL)
 
