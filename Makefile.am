@@ -4,9 +4,11 @@ NULL =
 SUBDIRS = network-analyzer src po
 
 MAINTAINERCLEANFILES = \
+	ABOUT-NLS		\
 	aclocal.m4		\
 	config.guess		\
 	config.h.in		\
+	config.rpath		\
 	config.sub		\
 	depcomp			\
 	INSTALL			\
