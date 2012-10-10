@@ -23,7 +23,12 @@ gnome_network_analyzer_SOURCES = \
 	main.c			\
 	$(NULL)
 
+dbusconffile = org.gnome.NetworkAnalyzer.conf
 dbusconfdir = $(sysconfdir)/dbus-1/system.d
-dbusconf_DATA = org.gnome.NetworkAnalyzer.conf
+dbusconf_DATA = $(dbusconffile)
+
+EXTRA_DIST = \
+	$(dbusconffile)	\
+	$(NULL)
 
 -include $(top_srcdir)/git.mk
