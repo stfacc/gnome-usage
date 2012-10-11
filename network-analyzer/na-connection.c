@@ -51,7 +51,7 @@ na_packet_list_add_packet (NAPacketList *packet_list,
 {
   if (packet_list->list == NULL)
     {
-      packet_list->list = g_list_append (packet_list->list, na_packet_copy (packet));
+      packet_list->list = g_list_prepend (packet_list->list, na_packet_copy (packet));
     }
   else
     {
@@ -59,7 +59,7 @@ na_packet_list_add_packet (NAPacketList *packet_list,
       if (packet->time.tv_sec == first_packet->time.tv_sec)
         first_packet->len += packet->len;
       else
-        packet_list->list = g_list_append (packet_list->list, na_packet_copy (packet));
+        packet_list->list = g_list_prepend (packet_list->list, na_packet_copy (packet));
     }
 }
 
@@ -75,11 +75,11 @@ na_packet_list_sum_packets (NAPacketList   *packet_list,
       NAPacket *packet = (NAPacket *)iter->data;
       if (packet->time.tv_sec <= t.tv_sec - PERIOD)
         {
-          g_list_free_full (iter, (GDestroyNotify)na_packet_free);
           if (iter->prev != NULL)
             iter->prev->next = NULL;
           else
             packet_list->list = NULL;
+          g_list_free_full (iter, (GDestroyNotify)na_packet_free);
           return total;
         }
       total += packet->len;
