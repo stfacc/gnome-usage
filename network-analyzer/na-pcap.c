@@ -28,9 +28,11 @@
 #include <glib.h>
 #include <net/ethernet.h>
 #include <net/if.h>
+#include <net/ppp_defs.h>
 #include <netinet/ip.h>
 #include <netinet/ip6.h>
 #include <netinet/tcp.h>
+#include <netinet/udp.h>
 #include <pcap/pcap.h>
 
 /* In order to identify the process using a TCP connection, we need to know
@@ -45,6 +47,9 @@
  * length to the more-or-less arbitrary number of 200 bytes.
  */
 #define PCAP_SNAPLEN 200
+
+#define TCP_PROTOCOL_NUMBER 6
+#define UDP_PROTOCOL_NUMBER 17
 
 GQuark
 na_pcap_error_quark ()
@@ -117,30 +122,29 @@ typedef struct
 } IPAddress;
 
 static void
-parse_tcp (NAPCapHandle      *handle,
-           const struct pcap_pkthdr *header,
-           const u_char      *packet,
-           const IPAddress    *address)
+push_packet (NAPCapHandle             *handle,
+             const struct pcap_pkthdr *header,
+             const IPAddress          *address,
+             gushort                   s_port,
+             gushort                   d_port)
 {
-  struct tcphdr *tcp = (struct tcphdr *)packet;
-
   NAPacket *na_packet;
   switch (address->sa_family)
     {
     case (AF_INET):
       na_packet = na_packet_new_from_ip4 (address->src.ip,
-                                          ntohs(tcp->source),
+                                          s_port,
                                           address->dst.ip,
-                                          ntohs(tcp->dest),
+                                          d_port,
                                           header->len,
                                           header->ts,
                                           NA_PACKET_DIRECTION_UNKNOWN);
       break;
     case (AF_INET6):
       na_packet = na_packet_new_from_ip6 (address->src.ip6,
-                                          ntohs(tcp->source),
+                                          s_port,
                                           address->dst.ip6,
-                                          ntohs(tcp->dest),
+                                          d_port,
                                           header->len,
                                           header->ts,
                                           NA_PACKET_DIRECTION_UNKNOWN);
@@ -164,52 +168,33 @@ parse_tcp (NAPCapHandle      *handle,
   na_packet_free (na_packet);
 }
 
-#if 0
-int process_udp (u_char * userdata, const dp_header * header, const u_char * m_packet) {
-	PCapContext *context = (PCapContext *) userdata;
-	//struct tcphdr * tcp = (struct tcphdr *) m_packet;
-	struct udphdr * udp = (struct udphdr *) m_packet;
-
-	curtime = header->ts;
-
-	/* TODO get info from userdata, then call getPacket */
-	NAPacket * packet;
-	switch (context->sa_family)
-	{
-		case (AF_INET):
-			packet = na_packet_new_from_ip4 (context->ip_src, ntohs(udp->source), context->ip_dst, ntohs(udp->dest), header->len, header->ts, NA_PACKET_DIRECTION_UNKNOWN);
-			break;
-		case (AF_INET6):
-			packet = na_packet_new_from_ip6 (context->ip6_src, ntohs(udp->source), context->ip6_dst, ntohs(udp->dest), header->len, header->ts, NA_PACKET_DIRECTION_UNKNOWN);
-			break;
-	}
-
-	NAConnection * connection = na_connection_find_from_packet (packet);
-
-	if (connection != NULL)
-	{
-		/* add packet to the connection */
-		na_connection_add_packet (connection, packet);
-	} else {
-		/* else: unknown connection, create new */
-		connection = na_connection_new (packet);
-		na_process_find_from_connection (connection, context->iface);
-	}
-	na_packet_free (packet);
-
-	/* we're done now. */
-	return TRUE;
+static void
+parse_tcp (NAPCapHandle             *handle,
+           const struct pcap_pkthdr *header,
+           const u_char             *packet,
+           const IPAddress          *address)
+{
+  struct tcphdr *tcp = (struct tcphdr *)packet;
+  push_packet (handle, header, address, ntohs (tcp->source), ntohs (tcp->dest));
 }
 
-#endif
+static void
+parse_udp (NAPCapHandle             *handle,
+           const struct pcap_pkthdr *header,
+           const u_char             *packet,
+           const IPAddress          *address)
+{
+  struct udphdr *udp = (struct udphdr *)packet;
+  push_packet (handle, header, address, ntohs (udp->source), ntohs (udp->dest));
+}
 
 static void
-parse_ip (NAPCapHandle      *handle,
+parse_ip (NAPCapHandle             *handle,
           const struct pcap_pkthdr *header,
-          const u_char      *packet)
+          const u_char             *packet)
 {
   const struct ip *ip = (struct ip *)packet;
-  u_char * payload = (u_char *) packet + sizeof (struct ip);
+  const u_char *payload = packet + sizeof (struct ip);
 
   IPAddress address;
   address.sa_family = AF_INET;
@@ -218,8 +203,11 @@ parse_ip (NAPCapHandle      *handle,
 
   switch (ip->ip_p)
     {
-    case (6):
+    case (TCP_PROTOCOL_NUMBER):
       parse_tcp (handle, header, payload, &address);
+      break;
+    case (UDP_PROTOCOL_NUMBER):
+      parse_udp (handle, header, payload, &address);
       break;
     default:
       break;
@@ -227,12 +215,12 @@ parse_ip (NAPCapHandle      *handle,
 }
 
 static void
-parse_ip6 (NAPCapHandle      *handle,
+parse_ip6 (NAPCapHandle             *handle,
            const struct pcap_pkthdr *header,
-           const u_char      *packet)
+           const u_char             *packet)
 {
   const struct ip6_hdr *ip6 = (struct ip6_hdr *)packet;
-  u_char *payload = (u_char *)packet + sizeof (struct ip6_hdr);
+  const u_char *payload = packet + sizeof (struct ip6_hdr);
 
   IPAddress address;
   address.sa_family = AF_INET6;
@@ -241,8 +229,11 @@ parse_ip6 (NAPCapHandle      *handle,
 
   switch ((ip6->ip6_ctlun).ip6_un1.ip6_un1_nxt)
     {
-    case (6):
+    case (TCP_PROTOCOL_NUMBER):
       parse_tcp (handle, header, payload, &address);
+      break;
+    case (UDP_PROTOCOL_NUMBER):
+      parse_udp (handle, header, payload, &address);
       break;
     default:
       break;
@@ -250,19 +241,19 @@ parse_ip6 (NAPCapHandle      *handle,
 }
 
 static void
-parse_ethernet (NAPCapHandle      *handle,
+parse_ethernet (NAPCapHandle             *handle,
                 const struct pcap_pkthdr *header,
-                const u_char      *packet)
+                const u_char             *packet)
 {
   const struct ether_header *ethernet = (struct ether_header *)packet;
-  u_char * payload = (u_char *)packet + sizeof (struct ether_header);
+  const u_char * payload = packet + sizeof (struct ether_header);
 
-  switch (ethernet->ether_type)
+  switch (ntohs (ethernet->ether_type))
     {
-    case (0x0008):
+    case (ETHERTYPE_IP):
       parse_ip (handle, header, payload);
       break;
-    case (0xDD86):
+    case (ETHERTYPE_IPV6):
       parse_ip6 (handle, header, payload);
       break;
     default:
@@ -270,35 +261,19 @@ parse_ethernet (NAPCapHandle      *handle,
     }
 }
 
-/* ppp header, i hope ;) */
-/* glanced from ethereal, it's 16 bytes, and the payload packet type is
- * in the last 2 bytes... */
-struct ppp_header {
-  u_int16_t dummy1;
-  u_int16_t dummy2;
-  u_int16_t dummy3;
-  u_int16_t dummy4;
-  u_int16_t dummy5;
-  u_int16_t dummy6;
-  u_int16_t dummy7;
-
-  u_int16_t packettype;
-};
-
 static void
-parse_ppp (NAPCapHandle      *handle,
+parse_ppp (NAPCapHandle             *handle,
            const struct pcap_pkthdr *header,
-           const u_char      *packet)
+           const u_char             *packet)
 {
-  const struct ppp_header *ppp = (struct ppp_header *)packet;
-  u_char *payload = (u_char *)packet + sizeof (struct ppp_header);
+  const u_char *payload = packet + PPP_HDRLEN;
 
-  switch (ppp->packettype)
+  switch (PPP_PROTOCOL (packet))
     {
-    case (0x0008):
+    case (PPP_IP):
       parse_ip (handle, header, payload);
       break;
-    case (0xDD86):
+    case (PPP_IPV6):
       parse_ip6 (handle, header, payload);
       break;
     default:

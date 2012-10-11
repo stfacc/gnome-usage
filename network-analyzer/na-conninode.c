@@ -161,6 +161,7 @@ addprocinfo (GHashTable *table,
   if (procinfo == NULL)
     return FALSE;
 
+  /* Discard header line */
   fgets (buffer, sizeof (buffer), procinfo);
   do
     {
@@ -179,10 +180,10 @@ na_conninode_table_refresh (GHashTable *table)
 {
   /* we don't forget old mappings, just overwrite */
 
-  if (!addprocinfo (table, "/proc/net/tcp"))
-    g_error ("Couldn't open /proc/net/tcp");
-
+  addprocinfo (table, "/proc/net/tcp");
   addprocinfo (table, "/proc/net/tcp6");
+  addprocinfo (table, "/proc/net/udp");
+  addprocinfo (table, "/proc/net/udp6");
 }
 
 GHashTable *
