@@ -10,6 +10,7 @@ namespace Usage {
 
     [DBus (name = "org.gnome.NetworkAnalyzer")]
     interface NetworkAnalyzer : Object {
+        public abstract void acknowledge () throws IOError;
         public signal void usage_changed (ProcessInfo[] proc_info);
     }
 
@@ -32,6 +33,8 @@ namespace Usage {
                                                        "org.gnome.NetworkAnalyzer",
                                                        "/org/gnome/NetworkAnalyzer");
                 network_analyzer.usage_changed.connect ((proc_info) => {
+                    network_analyzer.acknowledge ();
+
                     list_box.foreach ((widget) => { widget.destroy (); });
 
                     var title = new Gtk.Grid () {
