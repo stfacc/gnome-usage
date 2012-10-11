@@ -26,6 +26,12 @@ namespace Usage {
             };
             content = list_box;
 
+            list_box.set_sort_func ((a, b) => {
+                var aa = a.get_data<int>("sort_id");
+                var bb = b.get_data<int>("sort_id");
+                return bb - aa;
+            });
+
             var size_group = new Gtk.SizeGroup (Gtk.SizeGroupMode.HORIZONTAL);
 
             try {
@@ -53,6 +59,7 @@ namespace Usage {
                     label.xalign = 1.0f;
                     title.add (label);
 
+                    title.set_data ("sort_id", int.MAX);
                     list_box.add (title);
 
                     foreach (var info in proc_info) {
@@ -75,6 +82,8 @@ namespace Usage {
                         label.xalign = 1.0f;
                         size_group.add_widget (label);
                         element.add (label);
+
+                        element.set_data ("sort_id", (int)(info.received * 100));
 
                         list_box.add (element);
                     }
