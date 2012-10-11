@@ -33,6 +33,19 @@
 #include <netinet/tcp.h>
 #include <pcap/pcap.h>
 
+/* In order to identify the process using a TCP connection, we need to know
+ * the source and destination ports, which are stored in the TCP header.
+ * To be sure to capture these data, on ethernet for example, we need to capture:
+ *
+ *   Ethernet header       at most 18 bytes +
+ *   IP header             at most 60 bytes +
+ *   mandatory TCP header          20 bytes
+ *
+ * which gives 98 bytes. Let's be ultra conservative and just set the snapshot
+ * length to the more-or-less arbitrary number of 200 bytes.
+ */
+#define PCAP_SNAPLEN 200
+
 GQuark
 na_pcap_error_quark ()
 {
@@ -52,7 +65,7 @@ na_pcap_open (const char *iface,
 {
   char errbuf[PCAP_ERRBUF_SIZE];
 
-  pcap_t *pcap_handle = pcap_open_live (iface, BUFSIZ, 0, 100, errbuf);
+  pcap_t *pcap_handle = pcap_open_live (iface, PCAP_SNAPLEN, 0, 100, errbuf);
 
   if (pcap_handle == NULL)
     {
