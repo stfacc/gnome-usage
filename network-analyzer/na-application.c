@@ -32,6 +32,8 @@
 #define NETWORK_ANALYZER_DBUS_OBJECT_PATH "/org/gnome/NetworkAnalyzer"
 #define NETWORK_ANALYZER_DBUS_IFACE       "org.gnome.NetworkAnalyzer"
 
+#define QUIT_TIMEOUT_DURATION 5 /* seconds */
+
 static GDBusNodeInfo *introspection_data = NULL;
 static const gchar introspection_xml[] =
   "<node>"
@@ -39,6 +41,7 @@ static const gchar introspection_xml[] =
   "    <signal name='UsageChanged'>"
   "      <arg type='a(sdd)' name='processes_array'/>"
   "    </signal>"
+  "    <method name='Acknowledge' />"
   "  </interface>"
   "</node>";
 
@@ -59,6 +62,8 @@ struct _NAApplicationPrivate
   GDBusConnection *system_bus;
 
   GSList *iface_handles;
+
+  int quit_timeout_id;
 
   int refresh_delay;
 };
@@ -124,6 +129,42 @@ main_loop_cb (gpointer user_data)
     return TRUE;
 }
 
+static gboolean
+quit_timeout_cb (GApplication *application)
+{
+  g_application_quit (application);
+}
+
+static void
+reset_quit_timeout (NAApplication *application)
+{
+  if (application->priv->quit_timeout_id != 0)
+    g_source_remove (application->priv->quit_timeout_id);
+  application->priv->quit_timeout_id = g_timeout_add_seconds (QUIT_TIMEOUT_DURATION, (GSourceFunc)quit_timeout_cb, application);
+}
+
+static void
+handle_method_call (GDBusConnection       *connection,
+                    const gchar           *sender,
+                    const gchar           *object_path,
+                    const gchar           *interface_name,
+                    const gchar           *method_name,
+                    GVariant              *parameters,
+                    GDBusMethodInvocation *invocation,
+                    gpointer               user_data)
+{
+  if (g_strcmp0 (method_name, "Acknowledge") == 0)
+    {
+      reset_quit_timeout (user_data);
+      g_dbus_method_invocation_return_value (invocation, NULL);
+    }
+}
+
+static const GDBusInterfaceVTable interface_vtable =
+{
+  handle_method_call
+};
+
 static void
 on_bus_acquired (GDBusConnection *connection,
                  const gchar     *name,
@@ -136,8 +177,8 @@ on_bus_acquired (GDBusConnection *connection,
   guint id = g_dbus_connection_register_object (connection,
                                                 NETWORK_ANALYZER_DBUS_OBJECT_PATH,
                                                 introspection_data->interfaces[0],
-                                                NULL,
-                                                NULL,
+                                                &interface_vtable,
+                                                application,
                                                 NULL,
                                                 NULL);
   g_assert (id > 0);
@@ -270,6 +311,8 @@ na_application_init (NAApplication *self)
                                             NAApplicationPrivate);
 
   self->priv->refresh_delay = DEFAULT_REFRESH_DELAY;
+  self->priv->quit_timeout_id = 0;
+  reset_quit_timeout (self);
 }
 
 static void
