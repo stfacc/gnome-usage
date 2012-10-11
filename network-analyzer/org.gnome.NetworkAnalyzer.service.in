@@ -1,0 +1,4 @@
+[D-BUS Service]
+Name=org.gnome.NetworkAnalyzer
+Exec=@libexecdir@/gnome-network-analyzer
+User=root

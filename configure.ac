@@ -32,6 +32,8 @@ AC_PROG_MAKE_SET
 AM_PROG_VALAC([0.17.4])
 PKG_PROG_PKG_CONFIG([0.22])
 
+AC_PROG_SED
+
 ## don't rerun to this point if we abort
 AC_CACHE_SAVE
 
@@ -81,9 +83,11 @@ AC_OUTPUT
 echo "
     GNOME Usage $VERSION
 
-    prefix: ${prefix}
+    prefix:        ${prefix}
+    sysconfdir:    ${sysconfdir}
+    libexecdir:    ${libexecdir}
     Vala compiler: ${VALAC}
-    C compiler: ${CC}
+    C compiler:    ${CC}
 
     Now type 'make' to build $PACKAGE
 "

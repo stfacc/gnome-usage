@@ -4,7 +4,7 @@ LDADD = $(LIBPCAP_LIBS) $(NETWORK_ANALYZER_LIBS) -lm
 
 AM_CFLAGS = $(LIBPCAP_CFLAGS) $(NETWORK_ANALYZER_CFLAGS)
 
-bin_PROGRAMS = gnome-network-analyzer
+libexec_PROGRAMS = gnome-network-analyzer
 
 c_sources = \
 	na-application.c	\
@@ -23,12 +23,25 @@ gnome_network_analyzer_SOURCES = \
 	main.c			\
 	$(NULL)
 
-dbusconffile = org.gnome.NetworkAnalyzer.conf
+# D-BUS service file
+%.service: %.service.in ../config.log
+	$(AM_V_GEN) $(SED) -e "s|\@libexecdir\@|$(libexecdir)|" $< > $@
+
+servicedir = $(prefix)/share/dbus-1/system-services
+service_in_file = org.gnome.NetworkAnalyzer.service.in
+service_DATA = org.gnome.NetworkAnalyzer.service
+
+dbus_conf_file = org.gnome.NetworkAnalyzer.conf
 dbusconfdir = $(sysconfdir)/dbus-1/system.d
-dbusconf_DATA = $(dbusconffile)
+dbusconf_DATA = $(dbus_conf_file)
 
 EXTRA_DIST = \
-	$(dbusconffile)	\
+	$(service_in_file)	\
+	$(dbus_conf_file)	\
+	$(NULL)
+
+DISTCLEANFILES = \
+	$(service_DATA)	\
 	$(NULL)
 
 -include $(top_srcdir)/git.mk
