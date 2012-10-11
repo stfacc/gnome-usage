@@ -304,7 +304,6 @@ na_process_find_from_connection (NAConnection *connection,
 // haven't seen the connection->inode yet though).
       na_inodeproc_table_refresh (inodeproc_table);
       na_conninode_table_refresh (conninode_table);
-      hashstring = na_packet_get_hashstring (refpacket);
       inode = (gulong *) g_hash_table_lookup (conninode_table, hashstring);
 
       if (inode == NULL)
@@ -349,7 +348,6 @@ na_process_find_from_connection (NAConnection *connection,
 
   if (proc == NULL)
     {
-      hashstring = na_packet_get_hashstring (refpacket);
       proc = na_process_new (inode != NULL ? *inode : 0, "", hashstring);
       processes = g_list_append (processes, proc);
     }

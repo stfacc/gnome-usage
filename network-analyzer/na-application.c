@@ -28,8 +28,6 @@
 #include <nm-client.h>
 
 
-extern struct timeval curtime;
-
 #define NETWORK_ANALYZER_DBUS_NAME        "org.gnome.NetworkAnalyzer"
 #define NETWORK_ANALYZER_DBUS_OBJECT_PATH "/org/gnome/NetworkAnalyzer"
 #define NETWORK_ANALYZER_DBUS_IFACE       "org.gnome.NetworkAnalyzer"
@@ -75,7 +73,12 @@ tokbps (guint32 bytes)
 static void
 do_refresh (NAApplication *application)
 {
-  GList *proc_info = na_process_info_get_all (curtime);
+  struct timeval t;
+  gettimeofday (&t, NULL);
+  GList *proc_info = na_process_info_get_all (t);
+
+  if (proc_info == NULL)
+    return;
 
   GVariantBuilder *builder = g_variant_builder_new (G_VARIANT_TYPE_ARRAY);
   while (proc_info != NULL)
@@ -109,7 +112,9 @@ main_loop_cb (gpointer user_data)
 
       int retval = na_pcap_dispatch (handle);
       if (retval == -1 || retval == -2)
-        g_debug ("Error dispatching for device %s", na_pcap_handle_get_iface (handle));
+        g_debug ("pcap: Error dispatching for device %s", na_pcap_handle_get_iface (handle));
+      else
+        g_debug ("pcap: Processed %d packets for device %s", retval, na_pcap_handle_get_iface (handle));
 
       iter = iter->next;
     }

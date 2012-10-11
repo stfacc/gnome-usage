@@ -33,8 +33,6 @@
 #include <netinet/tcp.h>
 #include <pcap/pcap.h>
 
-struct timeval curtime;
-
 GQuark
 na_pcap_error_quark ()
 {
@@ -112,8 +110,6 @@ parse_tcp (NAPCapHandle      *handle,
            const IPAddress    *address)
 {
   struct tcphdr *tcp = (struct tcphdr *)packet;
-
-  curtime = header->ts;
 
   NAPacket *na_packet;
   switch (address->sa_family)

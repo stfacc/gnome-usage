@@ -31,8 +31,12 @@
 G_BEGIN_DECLS
 
 /* the amount of time after the last packet was recieved
+ * after which a connection is removed */
+#define CONNTIMEOUT 25
+
+/* the amount of time after the last packet was recieved
  * after which a process is removed */
-#define PROCESSTIMEOUT 150
+#define PROCESSTIMEOUT 50
 
 typedef struct _NAProcess NAProcess;
 

@@ -29,10 +29,6 @@
 
 G_BEGIN_DECLS
 
-/* the amount of time after the last packet was recieved
- * after which a connection is removed */
-#define CONNTIMEOUT 50
-
 /* take the average speed over the last 5 seconds */
 #define PERIOD 5
 
