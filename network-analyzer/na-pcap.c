@@ -70,14 +70,26 @@ na_pcap_open (const char *iface,
 {
   char errbuf[PCAP_ERRBUF_SIZE];
 
-  pcap_t *pcap_handle = pcap_open_live (iface, PCAP_SNAPLEN, 0, 100, errbuf);
+  pcap_t *pcap_handle = pcap_create (iface, errbuf);
 
   if (pcap_handle == NULL)
     {
       g_set_error (error,
                    NA_PCAP_ERROR,
                    NA_PCAP_ERROR_OPEN,
-                   "pcap failed to open iface: %s", errbuf);
+                   "pcap failed to create handle for iface: %s", errbuf);
+      return NULL;
+    }
+
+  pcap_set_snaplen (pcap_handle, PCAP_SNAPLEN);
+  pcap_set_timeout (pcap_handle, 100);
+
+  if (pcap_activate (pcap_handle) != 0)
+    {
+      g_set_error (error,
+                   NA_PCAP_ERROR,
+                   NA_PCAP_ERROR_OPEN,
+                   "pcap failed to activate handle for iface");
       return NULL;
     }
 
