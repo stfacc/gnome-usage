@@ -43,20 +43,16 @@ struct _NAProcess
 {
   char *name;
   GList *connections;
-  int pid;
-  gulong inode;
-  uid_t uid;
-};
+  pid_t pid;
+  uid_t uid;};
 
 
 NAProcess *
-na_process_new (gulong      inode,
-                const char *name)
+na_process_new (const char *name)
 {
   NAProcess *process = g_new (NAProcess, 1);
 
   process->name = g_strdup (name);
-  process->inode = inode;
   process->connections = NULL;
   process->pid = 0;
   process->uid = 0;
@@ -91,19 +87,6 @@ uid_t
 na_process_get_uid (NAProcess *process)
 {
   return process->uid;
-}
-
-void
-na_process_set_uid (NAProcess *process,
-                    uid_t uid)
-{
-  process->uid = uid;
-}
-
-gulong
-na_process_get_inode (NAProcess *process)
-{
-  return process->inode;
 }
 
 char *
@@ -174,6 +157,7 @@ na_process_info_get_all (struct timeval t)
         {
           NAProcInfo *info = g_new (NAProcInfo, 1);
           info->name = process->name;
+	  info->pid = process->pid;
           na_process_sum_connections (process, t, &info->recv, &info->sent);
           proc_info = g_list_append (proc_info, info);
 
@@ -238,7 +222,7 @@ get_process_from_inode (gulong inode)
   if (proc != NULL)
     return proc;
 
-  NAProcess *newproc = na_process_new (inode, node->name);
+  NAProcess *newproc = na_process_new (node->name);
   newproc->pid = node->pid;
 
   char *procdir = g_strdup_printf ("/proc/%d", node->pid);
@@ -259,9 +243,9 @@ if (!ROBUST && (retval != 0))
 */
 
   if (retval != 0)
-    na_process_set_uid (newproc, 0);
+    newproc->uid = 0;
   else
-    na_process_set_uid (newproc, stats.st_uid);
+    newproc->uid = stats.st_uid;
 
 /*if (getpwuid(stats.st_uid) == NULL) {
 	std::stderr << "uid for inode 
@@ -344,7 +328,7 @@ na_process_find_from_connection (NAConnection *connection)
 
   if (proc == NULL)
     {
-      proc = na_process_new (inode != NULL ? *inode : 0, hashstring);
+      proc = na_process_new (hashstring);
       processes = g_list_append (processes, proc);
     }
 

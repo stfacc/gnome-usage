@@ -39,7 +39,7 @@ static const gchar introspection_xml[] =
   "<node>"
   "  <interface name='org.gnome.NetworkAnalyzer'>"
   "    <signal name='UsageChanged'>"
-  "      <arg type='a(sdd)' name='processes_array'/>"
+  "      <arg type='a(sidd)' name='processes_array'/>"
   "    </signal>"
   "    <method name='Acknowledge' />"
   "  </interface>"
@@ -89,7 +89,7 @@ do_refresh (NAApplication *application)
   while (proc_info != NULL)
     {
       NAProcInfo *info = (NAProcInfo *)proc_info->data;
-      g_variant_builder_add (builder, "(sdd)", info->name, tokbps (info->recv), tokbps (info->sent));
+      g_variant_builder_add (builder, "(sidd)", info->name, info->pid, tokbps (info->recv), tokbps (info->sent));
       proc_info = proc_info->next;
     }
 
@@ -99,7 +99,7 @@ do_refresh (NAApplication *application)
                                  NETWORK_ANALYZER_DBUS_OBJECT_PATH,
                                  NETWORK_ANALYZER_DBUS_IFACE,
                                  "UsageChanged",
-                                 g_variant_new ("(a(sdd))", builder),
+                                 g_variant_new ("(a(sidd))", builder),
                                  NULL);
 
   g_variant_builder_unref (builder);

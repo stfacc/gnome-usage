@@ -43,12 +43,12 @@ typedef struct _NAProcess NAProcess;
 typedef struct
 {
   char *name;
+  pid_t pid;
   guint32 sent;
   guint32 recv;
 } NAProcInfo;
 
-NAProcess *na_process_new                  (gulong      inode,
-                                            const char *name);
+NAProcess *na_process_new                  (const char *name);
 
 void       na_process_free                 (NAProcess *process);
 
@@ -56,10 +56,7 @@ int        na_process_get_last_packet_time (NAProcess *process);
 
 uid_t      na_process_get_uid              (NAProcess *process);
 
-void       na_process_set_uid              (NAProcess *process,
-                                            uid_t uid);
-
-gulong     na_process_get_inode            (NAProcess *process);
+pid_t      na_process_get_pid              (NAProcess *process);
 
 char      *na_process_get_name             (NAProcess *process);
 
