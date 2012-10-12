@@ -52,10 +52,29 @@ namespace Usage {
         public NetworkView () {
             name = _("Network");
 
-            var list_box = new Egg.ListBox () {
+            var grid = new Gtk.Grid () {
+                orientation = Gtk.Orientation.VERTICAL,
+                row_spacing = 20,
+                column_spacing = 20,
                 margin = 40
             };
-            content = list_box;
+            content = grid;
+
+            var graph = new GraphWidget () { hexpand = true };
+            graph.set_size_request (-1, 150);
+            var graph_overlay = new Gtk.Overlay ();
+            graph_overlay.add (graph);
+            var graph_label = new Gtk.Label (_("Received network traffic")) {
+                margin = 5,
+                halign = Gtk.Align.START,
+                valign = Gtk.Align.START
+            };
+            graph_label.get_style_context ().add_class ("dim-label");
+            graph_overlay.add_overlay (graph_label);
+            grid.attach (graph_overlay, 0, 0, 1, 1);
+
+            var list_box = new Egg.ListBox ();
+            grid.attach (list_box, 0, 1, 1, 1);
 
             list_box.set_sort_func ((a, b) => {
                 var aa = a.get_data<int>("sort_id");
@@ -101,6 +120,9 @@ namespace Usage {
                     list_box.add (make_element (_("<b>Total</b>"), "<b>%.2f</b>".printf (total_received), "<b>%.2f</b>".printf (total_sent), -2));
 
                     list_box.show_all ();
+
+                    // Set an arbitrary maximum of 500kb/s
+                    graph.push (total_received / 500.0);
                 });
             } catch (Error e) {
                 print ("DBus error: %s\n", e.message);
