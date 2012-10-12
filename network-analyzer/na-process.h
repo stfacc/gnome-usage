@@ -48,7 +48,6 @@ typedef struct
 } NAProcInfo;
 
 NAProcess *na_process_new                  (gulong      inode,
-                                            const char *devicename,
                                             const char *name);
 
 void       na_process_free                 (NAProcess *process);
@@ -69,8 +68,7 @@ void       na_process_sum_connections      (NAProcess *process,
                                             guint32 *recv,
                                             guint32 *sent);
 
-NAProcess *na_process_find_from_connection (NAConnection *connection,
-                                            const char *devicename);
+NAProcess *na_process_find_from_connection (NAConnection *connection);
 
 GList     *na_process_info_get_all         (struct timeval t);
 

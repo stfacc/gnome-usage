@@ -42,7 +42,6 @@ static GList *processes = NULL;
 struct _NAProcess
 {
   char *name;
-  const char *devicename;
   GList *connections;
   int pid;
   gulong inode;
@@ -52,13 +51,11 @@ struct _NAProcess
 
 NAProcess *
 na_process_new (gulong      inode,
-                const char *devicename,
                 const char *name)
 {
   NAProcess *process = g_new (NAProcess, 1);
 
   process->name = g_strdup (name);
-  process->devicename = devicename;
   process->inode = inode;
   process->connections = NULL;
   process->pid = 0;
@@ -224,7 +221,7 @@ find_process (GHashTable *table,
  * if the process is not yet in the proclist, add it
  */
 static NAProcess *
-get_process_from_inode (gulong inode, const char * devicename)
+get_process_from_inode (gulong inode)
 {
   GHashTable *table = na_inodeproc_table_get ();
 
@@ -241,7 +238,7 @@ get_process_from_inode (gulong inode, const char * devicename)
   if (proc != NULL)
     return proc;
 
-  NAProcess *newproc = na_process_new (inode, devicename, node->name);
+  NAProcess *newproc = na_process_new (inode, node->name);
   newproc->pid = node->pid;
 
   char *procdir = g_strdup_printf ("/proc/%d", node->pid);
@@ -284,8 +281,7 @@ if (!ROBUST && (retval != 0))
  * 'unknown' process.
  */
 NAProcess *
-na_process_find_from_connection (NAConnection *connection,
-                                 const char *devicename)
+na_process_find_from_connection (NAConnection *connection)
 {
   GHashTable *conninode_table = na_conninode_table_get ();
   GHashTable *inodeproc_table = na_inodeproc_table_get ();
@@ -344,11 +340,11 @@ na_process_find_from_connection (NAConnection *connection,
 
   NAProcess *proc = NULL;
   if (inode != NULL)
-    proc = get_process_from_inode (*inode, devicename);
+    proc = get_process_from_inode (*inode);
 
   if (proc == NULL)
     {
-      proc = na_process_new (inode != NULL ? *inode : 0, "", hashstring);
+      proc = na_process_new (inode != NULL ? *inode : 0, hashstring);
       processes = g_list_append (processes, proc);
     }
 

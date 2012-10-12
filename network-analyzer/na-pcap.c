@@ -134,8 +134,7 @@ typedef struct
 } IPAddress;
 
 static void
-push_packet (NAPCapHandle             *handle,
-             const struct pcap_pkthdr *header,
+push_packet (const struct pcap_pkthdr *header,
              const IPAddress          *address,
              gushort                   s_port,
              gushort                   d_port)
@@ -174,35 +173,32 @@ push_packet (NAPCapHandle             *handle,
     {
       /* unknown connection, create new */
       connection = na_connection_new (na_packet);
-      na_process_find_from_connection (connection, handle->iface);
+      na_process_find_from_connection (connection);
     }
 
   na_packet_free (na_packet);
 }
 
 static void
-parse_tcp (NAPCapHandle             *handle,
-           const struct pcap_pkthdr *header,
+parse_tcp (const struct pcap_pkthdr *header,
            const u_char             *packet,
            const IPAddress          *address)
 {
   struct tcphdr *tcp = (struct tcphdr *)packet;
-  push_packet (handle, header, address, ntohs (tcp->source), ntohs (tcp->dest));
+  push_packet (header, address, ntohs (tcp->source), ntohs (tcp->dest));
 }
 
 static void
-parse_udp (NAPCapHandle             *handle,
-           const struct pcap_pkthdr *header,
+parse_udp (const struct pcap_pkthdr *header,
            const u_char             *packet,
            const IPAddress          *address)
 {
   struct udphdr *udp = (struct udphdr *)packet;
-  push_packet (handle, header, address, ntohs (udp->source), ntohs (udp->dest));
+  push_packet (header, address, ntohs (udp->source), ntohs (udp->dest));
 }
 
 static void
-parse_ip (NAPCapHandle             *handle,
-          const struct pcap_pkthdr *header,
+parse_ip (const struct pcap_pkthdr *header,
           const u_char             *packet)
 {
   const struct ip *ip = (struct ip *)packet;
@@ -216,10 +212,10 @@ parse_ip (NAPCapHandle             *handle,
   switch (ip->ip_p)
     {
     case (TCP_PROTOCOL_NUMBER):
-      parse_tcp (handle, header, payload, &address);
+      parse_tcp (header, payload, &address);
       break;
     case (UDP_PROTOCOL_NUMBER):
-      parse_udp (handle, header, payload, &address);
+      parse_udp (header, payload, &address);
       break;
     default:
       break;
@@ -227,8 +223,7 @@ parse_ip (NAPCapHandle             *handle,
 }
 
 static void
-parse_ip6 (NAPCapHandle             *handle,
-           const struct pcap_pkthdr *header,
+parse_ip6 (const struct pcap_pkthdr *header,
            const u_char             *packet)
 {
   const struct ip6_hdr *ip6 = (struct ip6_hdr *)packet;
@@ -242,10 +237,10 @@ parse_ip6 (NAPCapHandle             *handle,
   switch ((ip6->ip6_ctlun).ip6_un1.ip6_un1_nxt)
     {
     case (TCP_PROTOCOL_NUMBER):
-      parse_tcp (handle, header, payload, &address);
+      parse_tcp (header, payload, &address);
       break;
     case (UDP_PROTOCOL_NUMBER):
-      parse_udp (handle, header, payload, &address);
+      parse_udp (header, payload, &address);
       break;
     default:
       break;
@@ -253,8 +248,7 @@ parse_ip6 (NAPCapHandle             *handle,
 }
 
 static void
-parse_ethernet (NAPCapHandle             *handle,
-                const struct pcap_pkthdr *header,
+parse_ethernet (const struct pcap_pkthdr *header,
                 const u_char             *packet)
 {
   const struct ether_header *ethernet = (struct ether_header *)packet;
@@ -263,10 +257,10 @@ parse_ethernet (NAPCapHandle             *handle,
   switch (ntohs (ethernet->ether_type))
     {
     case (ETHERTYPE_IP):
-      parse_ip (handle, header, payload);
+      parse_ip (header, payload);
       break;
     case (ETHERTYPE_IPV6):
-      parse_ip6 (handle, header, payload);
+      parse_ip6 (header, payload);
       break;
     default:
       break;
@@ -274,8 +268,7 @@ parse_ethernet (NAPCapHandle             *handle,
 }
 
 static void
-parse_ppp (NAPCapHandle             *handle,
-           const struct pcap_pkthdr *header,
+parse_ppp (const struct pcap_pkthdr *header,
            const u_char             *packet)
 {
   const u_char *payload = packet + PPP_HDRLEN;
@@ -283,10 +276,10 @@ parse_ppp (NAPCapHandle             *handle,
   switch (PPP_PROTOCOL (packet))
     {
     case (PPP_IP):
-      parse_ip (handle, header, payload);
+      parse_ip (header, payload);
       break;
     case (PPP_IPV6):
-      parse_ip6 (handle, header, payload);
+      parse_ip6 (header, payload);
       break;
     default:
       break;
@@ -305,8 +298,7 @@ struct sll_header {
 };
 
 static void
-parse_linux_cooked (NAPCapHandle             *handle,
-                    const struct pcap_pkthdr *header,
+parse_linux_cooked (const struct pcap_pkthdr *header,
                     const u_char             *packet)
 {
   const struct sll_header *sll = (struct sll_header *)packet;
@@ -315,10 +307,10 @@ parse_linux_cooked (NAPCapHandle             *handle,
   switch (sll->sll_protocol)
     {
     case (0x0008):
-      parse_ip (handle, header, payload);
+      parse_ip (header, payload);
       break;
     case (0xDD86):
-      parse_ip6 (handle, header, payload);
+      parse_ip6 (header, payload);
       break;
     default:
       break;
@@ -335,18 +327,18 @@ pcap_dispatch_cb (u_char                   *u_handle,
   switch (handle->linktype)
     {
     case (DLT_EN10MB):
-      parse_ethernet (handle, header, packet);
+      parse_ethernet (header, packet);
       break;
     case (DLT_PPP):
-      parse_ppp (handle, header, packet);
+      parse_ppp (header, packet);
       break;
     case (DLT_LINUX_SLL):
-      parse_linux_cooked (handle, header, packet);
+      parse_linux_cooked (header, packet);
       break;
     case (DLT_RAW):
     case (DLT_NULL):
       // hope for the best
-      parse_ip (handle, header, packet);
+      parse_ip (header, packet);
       break;
     default:
       g_debug ("Unknown linktype %d", handle->linktype);
