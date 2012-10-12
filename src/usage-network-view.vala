@@ -4,6 +4,7 @@ namespace Usage {
 
     struct ProcessInfo {
         string name;
+        int pid;
         double received;
         double sent;
     }
@@ -49,12 +50,12 @@ namespace Usage {
                         halign = Gtk.Align.END
                     };
                     var label = new Gtk.Label (null);
-                    label.set_markup ("<b>Received (kb/s)</b>");
+                    label.set_markup (_("<b>Received (kb/s)</b>"));
                     size_group.add_widget (label);
                     label.xalign = 1.0f;
                     title.add (label);
                     label = new Gtk.Label (null);
-                    label.set_markup ("<b>Sent (kb/s)</b>");
+                    label.set_markup (_("<b>Sent (kb/s)</b>"));
                     size_group.add_widget (label);
                     label.xalign = 1.0f;
                     title.add (label);
@@ -62,11 +63,20 @@ namespace Usage {
                     title.set_data ("sort_id", int.MAX);
                     list_box.add (title);
 
+                    double unknown_received = 0;
+                    double unknown_sent = 0;
+
                     foreach (var info in proc_info) {
                         var element = new Gtk.Grid () {
                             orientation = Gtk.Orientation.HORIZONTAL,
                             column_spacing = 10
                         };
+
+                        if (info.pid == 0) {
+                            unknown_received += info.received;
+                            unknown_sent += info.sent;
+                            continue;
+                        }
 
                         label = new Gtk.Label (info.name) {
                             hexpand = true,
@@ -85,6 +95,31 @@ namespace Usage {
 
                         element.set_data ("sort_id", (int)(info.received * 100));
 
+                        list_box.add (element);
+                    }
+
+                    if (unknown_received > 0 || unknown_sent > 0) {
+                        var element = new Gtk.Grid () {
+                            orientation = Gtk.Orientation.HORIZONTAL,
+                            column_spacing = 10
+                        };
+
+                        label = new Gtk.Label (_("Unknown traffic")) {
+                            hexpand = true,
+                            halign = Gtk.Align.START
+                        };
+                        element.add (label);
+
+                        label = new Gtk.Label ("%.2f".printf (unknown_received));
+                        label.xalign = 1.0f;
+                        size_group.add_widget (label);
+                        element.add (label);
+                        label = new Gtk.Label ("%.2f".printf (unknown_sent));
+                        label.xalign = 1.0f;
+                        size_group.add_widget (label);
+                        element.add (label);
+
+                        element.set_data ("sort_id", -1);
                         list_box.add (element);
                     }
 
