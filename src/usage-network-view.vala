@@ -88,8 +88,18 @@ namespace Usage {
                 network_analyzer = Bus.get_proxy_sync (BusType.SYSTEM,
                                                        "org.gnome.NetworkAnalyzer",
                                                        "/org/gnome/NetworkAnalyzer");
+
+                if (network_analyzer == null) {
+                    print ("Error obtaining dbus proxy for NetworkAnalyzer\n");
+                    return;
+                }
+
                 network_analyzer.usage_changed.connect ((proc_info) => {
-                    network_analyzer.acknowledge ();
+                    try {
+                        network_analyzer.acknowledge ();
+                    } catch (Error e) {
+                        print ("Error calling dbus method org.gnome.NetworkAnalyzer.Acknowledge\n");
+                    }
 
                     list_box.foreach ((widget) => { widget.destroy (); });
 
