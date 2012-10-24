@@ -17,6 +17,7 @@ MAINTAINERCLEANFILES = \
 	missing			\
 	m4			\
 	po/Makefile.in.in	\
+	po/Makefile.in.in~	\
 	po/Makevars.template	\
 	po/Rules-quot		\
 	po/boldquot.sed		\
