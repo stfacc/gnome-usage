@@ -85,13 +85,11 @@ namespace Usage {
             size_group = new Gtk.SizeGroup (Gtk.SizeGroupMode.HORIZONTAL);
 
             try {
-                network_analyzer = Bus.get_proxy_sync (BusType.SYSTEM,
-                                                       "org.gnome.NetworkAnalyzer",
-                                                       "/org/gnome/NetworkAnalyzer");
-
-                if (network_analyzer == null) {
-                    print ("Error obtaining dbus proxy for NetworkAnalyzer\n");
-                    return;
+                while (network_analyzer == null) {
+                    debug ("Trying to connect to NetworkAnalyzer...\n");
+                    network_analyzer = Bus.get_proxy_sync (BusType.SYSTEM,
+                                                           "org.gnome.NetworkAnalyzer",
+                                                           "/org/gnome/NetworkAnalyzer");
                 }
 
                 network_analyzer.usage_changed.connect ((proc_info) => {
