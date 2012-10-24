@@ -1,8 +1,9 @@
 # List of source files containing translatable strings.
 # Please keep this file sorted alphabetically.
-src/usage-battery-view.c
-src/usage-cpu-view.c
-src/usage-memory-view.c
-src/usage-network-view.c
-src/usage-storage-view.c
-src/usage-window.c
+data/gnome-usage.desktop.in.in
+src/usage-battery-view.vala
+src/usage-cpu-view.vala
+src/usage-memory-view.vala
+src/usage-network-view.vala
+src/usage-storage-view.vala
+src/usage-window.vala
