@@ -1,0 +1,10 @@
+[Desktop Entry]
+_Name=Usage
+_GenericName=Resource usage viewer
+_Comment=Show the current resource usage of the system
+Exec=gnome-usage
+Terminal=false
+Type=Application
+StartupNotify=true
+OnlyShowIn=GNOME;
+Categories=GNOME;GTK;Network;

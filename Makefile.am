@@ -1,7 +1,7 @@
 ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
 NULL =
 
-SUBDIRS = network-analyzer src po
+SUBDIRS = network-analyzer data src po
 
 MAINTAINERCLEANFILES = \
 	ABOUT-NLS		\

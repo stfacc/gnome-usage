@@ -74,6 +74,8 @@ PKG_CHECK_MODULES(USAGE, [
 AC_CONFIG_FILES([
     Makefile
     network-analyzer/Makefile
+    data/Makefile
+    data/gnome-usage.desktop.in
     src/Makefile
     po/Makefile.in
 ])
