@@ -7,4 +7,4 @@ Terminal=false
 Type=Application
 StartupNotify=true
 OnlyShowIn=GNOME;
-Categories=GNOME;GTK;Network;
+Categories=GNOME;GTK;System;
