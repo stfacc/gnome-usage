@@ -17,8 +17,12 @@ namespace Usage {
 
     public class NetworkView : View {
 
+        const int NETWORK_ANALYZER_TIMEOUT = 2;
+
         NetworkAnalyzer network_analyzer = null;
         Gtk.SizeGroup size_group;
+        GraphWidget graph;
+        Egg.ListBox list_box;
 
         Gtk.Grid make_element (string name, string received, string sent, int sort_id) {
             var element = new Gtk.Grid () {
@@ -60,7 +64,7 @@ namespace Usage {
             };
             content = grid;
 
-            var graph = new GraphWidget () { hexpand = true };
+            graph = new GraphWidget () { hexpand = true };
             graph.set_size_request (-1, 150);
             var graph_overlay = new Gtk.Overlay ();
             graph_overlay.add (graph);
@@ -73,7 +77,7 @@ namespace Usage {
             graph_overlay.add_overlay (graph_label);
             grid.attach (graph_overlay, 0, 0, 1, 1);
 
-            var list_box = new Egg.ListBox ();
+            list_box = new Egg.ListBox ();
             grid.attach (list_box, 0, 1, 1, 1);
 
             list_box.set_sort_func ((a, b) => {
@@ -84,57 +88,75 @@ namespace Usage {
 
             size_group = new Gtk.SizeGroup (Gtk.SizeGroupMode.HORIZONTAL);
 
-            try {
-                while (network_analyzer == null) {
-                    debug ("Trying to connect to NetworkAnalyzer...\n");
-                    network_analyzer = Bus.get_proxy_sync (BusType.SYSTEM,
-                                                           "org.gnome.NetworkAnalyzer",
-                                                           "/org/gnome/NetworkAnalyzer");
+            start_network_analyzer ();
+        }
+
+        void start_network_analyzer () {
+            Bus.get_proxy.begin<NetworkAnalyzer> (BusType.SYSTEM,
+                                                  "org.gnome.NetworkAnalyzer",
+                                                  "/org/gnome/NetworkAnalyzer",
+                                                  0,
+                                                  null,
+                                                  (obj, res) => {
+                                                      try {
+                                                          network_analyzer = Bus.get_proxy.end (res);
+                                                          connect_network_analyzer_signal ();
+                                                      } catch (Error e) {
+                                                          print ("Error connecting to NetworkAnalyzer\n");
+                                                      }
+                                                  });
+        }
+
+        void connect_network_analyzer_signal () {
+            uint network_analyzer_timeout_id = 0;
+            network_analyzer.usage_changed.connect ((proc_info) => {
+                if (network_analyzer_timeout_id > 0) {
+                    Source.remove (network_analyzer_timeout_id);
+                }
+                network_analyzer_timeout_id = Timeout.add_seconds (NETWORK_ANALYZER_TIMEOUT, () => {
+                        start_network_analyzer ();
+                        return false;
+                });
+
+                try {
+                    network_analyzer.acknowledge ();
+                } catch (Error e) {
+                    print ("Error calling dbus method org.gnome.NetworkAnalyzer.Acknowledge\n");
                 }
 
-                network_analyzer.usage_changed.connect ((proc_info) => {
-                    try {
-                        network_analyzer.acknowledge ();
-                    } catch (Error e) {
-                        print ("Error calling dbus method org.gnome.NetworkAnalyzer.Acknowledge\n");
+                list_box.foreach ((widget) => { widget.destroy (); });
+
+                list_box.add (make_element ("", _("<b>Received (kb/s)</b>"), _("<b>Sent (kb/s)</b>"), int.MAX - 2));
+
+                double total_received = 0;
+                double total_sent = 0;
+                double unknown_received = 0;
+                double unknown_sent = 0;
+
+                foreach (var info in proc_info) {
+                    total_received += info.received;
+                    total_sent += info.sent;
+
+                    if (info.pid == 0) {
+                        unknown_received += info.received;
+                        unknown_sent += info.sent;
+                        continue;
                     }
 
-                    list_box.foreach ((widget) => { widget.destroy (); });
+                    list_box.add (make_element (info.name, "%.2f".printf (info.received), "%.2f".printf (info.sent), (int)(info.received * 100)));
+                }
 
-                    list_box.add (make_element ("", _("<b>Received (kb/s)</b>"), _("<b>Sent (kb/s)</b>"), int.MAX - 2));
+                if (unknown_received > 0 || unknown_sent > 0) {
+                    list_box.add (make_element (_("Unknown traffic"), "%.2f".printf (unknown_received), "%.2f".printf (unknown_sent), -1));
+                }
 
-                    double total_received = 0;
-                    double total_sent = 0;
-                    double unknown_received = 0;
-                    double unknown_sent = 0;
+                list_box.add (make_element (_("<b>Total</b>"), "<b>%.2f</b>".printf (total_received), "<b>%.2f</b>".printf (total_sent), -2));
 
-                    foreach (var info in proc_info) {
-                        total_received += info.received;
-                        total_sent += info.sent;
+                list_box.show_all ();
 
-                        if (info.pid == 0) {
-                            unknown_received += info.received;
-                            unknown_sent += info.sent;
-                            continue;
-                        }
-
-                        list_box.add (make_element (info.name, "%.2f".printf (info.received), "%.2f".printf (info.sent), (int)(info.received * 100)));
-                    }
-
-                    if (unknown_received > 0 || unknown_sent > 0) {
-                        list_box.add (make_element (_("Unknown traffic"), "%.2f".printf (unknown_received), "%.2f".printf (unknown_sent), -1));
-                    }
-
-                    list_box.add (make_element (_("<b>Total</b>"), "<b>%.2f</b>".printf (total_received), "<b>%.2f</b>".printf (total_sent), -2));
-
-                    list_box.show_all ();
-
-                    // Set an arbitrary maximum of 500kb/s
-                    graph.push (total_received / 500.0);
-                });
-            } catch (Error e) {
-                print ("DBus error: %s\n", e.message);
-            }
+                // Set an arbitrary maximum of 500kb/s
+                graph.push (total_received / 500.0);
+            });
         }
     }
 }
