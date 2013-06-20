@@ -12,7 +12,7 @@ namespace Usage {
             min_value = 0;
             max_value = NUM_LEVELS;
 
-            Gtk.level_bar_set_inverted (this, true);
+            inverted = true;
             set_size_request (40, -1);
 
             get_style_context ().add_class ("main-level-bar");
