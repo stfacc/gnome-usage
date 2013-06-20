@@ -10,6 +10,8 @@ namespace Usage {
 
     public class ElementWidget : Gtk.ListBoxRow {
 
+        public int sort_id;
+
         public bool is_headline { get; private set; }
 
         static HashTable<string, SizeGroups> size_groups_table;

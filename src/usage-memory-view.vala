@@ -27,11 +27,9 @@ namespace Usage {
                 foreach (unowned Process process in monitor.get_processes ()) {
                     var mem = (double) process.mem_usage;
                     var proc_widget = new ElementWidget (this, process.cmdline, mem, false);
-                    proc_widget.set_data ("sort_id", (int) (1000 * mem));
+                    proc_widget.sort_id = (int) (1000 * mem);
                     widget_list.insert_sorted (proc_widget, (a, b) => {
-                        var aa = a.get_data<int>("sort_id");
-                        var bb = b.get_data<int>("sort_id");
-                        return bb - aa;
+                        return (b as ElementWidget).sort_id - (a as ElementWidget).sort_id;
                     });
                 }
 
