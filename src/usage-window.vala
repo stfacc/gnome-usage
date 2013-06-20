@@ -15,18 +15,37 @@ namespace Usage {
         }
     }
 
+    [GtkTemplate (ui = "/org/gnome/usage/ui/usage-window.ui")]
     public class Window : Gtk.ApplicationWindow {
+
+        [GtkChild]
+        private Gtk.HeaderBar header_bar;
+        [GtkChild]
+        private Gtk.Stack stack;
+        [GtkChild]
+        private Gtk.StackSwitcher stack_switcher;
 
         public UIView current_view { get; set; }
 
         public View[] views;
 
+        [GtkCallback]
+        private void close_button_clicked (Gtk.Button button)
+        {
+            Gdk.Event event;
+
+            event = new Gdk.Event (Gdk.EventType.DELETE);
+
+            event.any.window = this.get_window ();
+            event.any.send_event = 1;
+
+            Gtk.main_do_event (event);
+        }
+
         public Window (Application app) {
             Object (application: app);
 
-            title = _("Usage");
             set_default_size (800, 550);
-            hide_titlebar_when_maximized = true;
 
             views = new View[UIView.N_VIEWS];
             views[UIView.CPU]     = new CPUView ();
@@ -35,23 +54,12 @@ namespace Usage {
             views[UIView.NETWORK] = new NetworkView ();
             views[UIView.BATTERY] = new BatteryView ();
 
-            var content = new Gtk.Grid () { orientation = Gtk.Orientation.VERTICAL };
-            var header_bar = new Gtk.HeaderBar ();
-            var stack_switcher = new Gtk.StackSwitcher ();
-            header_bar.custom_title = stack_switcher;
-
-            content.add (header_bar);
-
-            var stack = new Gtk.Stack ();
+            stack_switcher.stack = stack;
 
             foreach (var view in UIView.all ()) {
                 stack.add_titled  (views[view].content, views[view].name, views[view].name);
             };
-            content.add (stack);
 
-            stack_switcher.stack = stack;
-
-            add (content);
             show_all ();
         }
     }

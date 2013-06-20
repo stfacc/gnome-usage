@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <!-- interface-requires gtk+ 3.0 -->
+  <template class="UsageWindow" parent="Gtk.ApplicationWindow">
+    <property name="title" translatable="yes">Usage</property>
+    <child type="titlebar">
+      <object class="GtkHeaderBar" id="header_bar">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <child type="title">
+          <object class="GtkStackSwitcher" id="stack_switcher">
+          </object>
+        </child>
+        <child>
+          <object class="GtkSeparator" id="close_button_separator">
+            <property name="visible">True</property>
+            <property name="orientation">vertical</property>
+            <property name="valign">fill</property>
+          </object>
+          <packing>
+            <property name="pack_type">end</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="close_button">
+            <property name="visible">True</property>
+            <property name="valign">center</property>
+            <property name="relief">none</property>
+            <signal name="clicked" handler="close_button_clicked" swapped="no"/>
+            <style>
+              <class name="image-button"/>
+            </style>
+            <child>
+              <object class="GtkImage" id="close_image">
+                <property name="visible">True</property>
+                <property name="icon_size">1</property>
+                <property name="icon_name">window-close-symbolic</property>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="pack_type">end</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkStack" id="stack">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="transition_type">crossfade</property>
+      </object>
+    </child>
+  </template>
+</interface>

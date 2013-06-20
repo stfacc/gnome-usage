@@ -10,6 +10,8 @@ AM_CPPFLAGS = \
 	-DGNOMELOCALEDIR=\""$(prefix)/$(DATADIRNAME)/locale"\" 	\
 	$(NULL)
 
+BUILT_SOURCES = usage-resources.c
+
 bin_PROGRAMS = gnome-usage
 
 VALA_SOURCES = \
@@ -32,12 +34,17 @@ gnome_usage_SOURCES = \
 	config.vapi		\
 	glibtop.vapi		\
 	$(VALA_SOURCES)		\
+	$(BUILT_SOURCES)	\
 	$(NULL)
 
 gnome_usage_VALAFLAGS = \
 	--pkg gtk+-3.0	\
 	--pkg posix	\
+	--gresources=usage.gresource.xml \
 	$(NULL)
+
+usage-resources.c: usage.gresource.xml $(shell glib-compile-resources --generate-dependencies --sourcedir=$(srcdir) $(srcdir)/usage.gresource.xml)
+	$(AM_V_GEN) glib-compile-resources --target=$@ --sourcedir=$(srcdir) --generate-source $<
 
 AM_CFLAGS = \
 	$(USAGE_CFLAGS)		\
@@ -46,6 +53,11 @@ AM_CFLAGS = \
 gnome_usage_LDADD = \
 	-lm				\
 	$(USAGE_LIBS)			\
+	$(NULL)
+
+EXTRA_DIST = \
+	usage.gresource.xml \
+	usage-window.ui \
 	$(NULL)
 
 MAINTAINERCLEANFILES += $(VALA_SOURCES:.vala=.c)
