@@ -31,7 +31,7 @@ VALA_SOURCES = \
 
 gnome_usage_SOURCES = \
 	config.vapi		\
-	glibtop.vap		\
+	glibtop.vapi		\
 	$(VALA_SOURCES)		\
 	$(NULL)
 
