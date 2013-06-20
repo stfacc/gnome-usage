@@ -15,17 +15,17 @@ namespace Usage {
         public signal void usage_changed (ProcessInfo[] proc_info);
     }
 
-    public class NetworkView : View {
+    class NetworkListRow : Gtk.ListBoxRow {
+        static Gtk.SizeGroup size_group = null;
 
-        const int NETWORK_ANALYZER_TIMEOUT = 2;
+        public int sort_id;
 
-        NetworkAnalyzer network_analyzer = null;
-        Gtk.SizeGroup size_group;
-        GraphWidget graph;
-        Egg.ListBox list_box;
+        public NetworkListRow (string name, string received, string sent, int _sort_id) {
+            if (size_group == null) {
+                size_group = new Gtk.SizeGroup (Gtk.SizeGroupMode.HORIZONTAL);
+            }
 
-        Gtk.Grid make_element (string name, string received, string sent, int sort_id) {
-            var element = new Gtk.Grid () {
+            var grid = new Gtk.Grid () {
                 orientation = Gtk.Orientation.HORIZONTAL,
                 column_spacing = 10
             };
@@ -35,23 +35,34 @@ namespace Usage {
                 halign = Gtk.Align.START
             };
             label.set_markup (name);
-            element.add (label);
+            grid.add (label);
 
             label = new Gtk.Label (null);
             label.set_markup (received);
             label.xalign = 1.0f;
             size_group.add_widget (label);
-            element.add (label);
+            grid.add (label);
             label = new Gtk.Label (null);
             label.set_markup (sent);
             label.xalign = 1.0f;
             size_group.add_widget (label);
-            element.add (label);
+            grid.add (label);
 
-            element.set_data ("sort_id", sort_id);
+            add (grid);
 
-            return element;
+            sort_id = _sort_id;
         }
+
+    }
+
+    public class NetworkView : View {
+
+        const int NETWORK_ANALYZER_TIMEOUT = 2;
+
+        NetworkAnalyzer network_analyzer = null;
+        GraphWidget graph;
+        Gtk.ListBox list_box;
+
 
         public NetworkView () {
             name = _("Network");
@@ -77,16 +88,12 @@ namespace Usage {
             graph_overlay.add_overlay (graph_label);
             grid.attach (graph_overlay, 0, 0, 1, 1);
 
-            list_box = new Egg.ListBox ();
+            list_box = new Gtk.ListBox ();
             grid.attach (list_box, 0, 1, 1, 1);
 
             list_box.set_sort_func ((a, b) => {
-                var aa = a.get_data<int>("sort_id");
-                var bb = b.get_data<int>("sort_id");
-                return bb - aa;
+                return (b as NetworkListRow).sort_id - (a as NetworkListRow).sort_id;
             });
-
-            size_group = new Gtk.SizeGroup (Gtk.SizeGroupMode.HORIZONTAL);
 
             start_network_analyzer ();
         }
@@ -126,7 +133,7 @@ namespace Usage {
 
                 list_box.foreach ((widget) => { widget.destroy (); });
 
-                list_box.add (make_element ("", _("<b>Received (kb/s)</b>"), _("<b>Sent (kb/s)</b>"), int.MAX - 2));
+                list_box.add (new NetworkListRow ("", _("<b>Received (kb/s)</b>"), _("<b>Sent (kb/s)</b>"), int.MAX - 2));
 
                 double total_received = 0;
                 double total_sent = 0;
@@ -143,14 +150,14 @@ namespace Usage {
                         continue;
                     }
 
-                    list_box.add (make_element (info.name, "%.2f".printf (info.received), "%.2f".printf (info.sent), (int)(info.received * 100)));
+                    list_box.add (new NetworkListRow (info.name, "%.2f".printf (info.received), "%.2f".printf (info.sent), (int)(info.received * 100)));
                 }
 
                 if (unknown_received > 0 || unknown_sent > 0) {
-                    list_box.add (make_element (_("Unknown traffic"), "%.2f".printf (unknown_received), "%.2f".printf (unknown_sent), -1));
+                    list_box.add (new NetworkListRow (_("Unknown traffic"), "%.2f".printf (unknown_received), "%.2f".printf (unknown_sent), -1));
                 }
 
-                list_box.add (make_element (_("<b>Total</b>"), "<b>%.2f</b>".printf (total_received), "<b>%.2f</b>".printf (total_sent), -2));
+                list_box.add (new NetworkListRow (_("<b>Total</b>"), "<b>%.2f</b>".printf (total_received), "<b>%.2f</b>".printf (total_sent), -2));
 
                 list_box.show_all ();
 

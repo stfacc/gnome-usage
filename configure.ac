@@ -67,7 +67,7 @@ PKG_CHECK_MODULES(NETWORK_ANALYZER, [
 ])
 
 PKG_CHECK_MODULES(USAGE, [
-    gtk+-3.0 >= 3.7.0
+    gtk+-3.0 >= 3.9.3
     libgtop-2.0
 ])
 

@@ -8,7 +8,7 @@ namespace Usage {
         internal Gtk.SizeGroup percent;
     }
 
-    public class ElementWidget : Gtk.Grid {
+    public class ElementWidget : Gtk.ListBoxRow {
 
         public bool is_headline { get; private set; }
 
@@ -30,7 +30,7 @@ namespace Usage {
         }
 
         public ElementWidget (Usage.View view, string text, double load, bool headline) {
-            orientation = Gtk.Orientation.HORIZONTAL;
+            var grid = new Gtk.Grid () { orientation = Gtk.Orientation.HORIZONTAL };
             is_headline = headline;
 
             var label = new Gtk.Label (null) {
@@ -41,7 +41,7 @@ namespace Usage {
             var box = new Gtk.EventBox ();
             box.set_size_request (150, -1);
             box.add (label);
-            add (box);
+            grid.add (box);
 
             int margin = headline ? 20 : 5;
             var progress = new Gtk.LevelBar () {
@@ -50,7 +50,7 @@ namespace Usage {
                 margin_bottom = margin,
                 hexpand = true
             };
-            add (progress);
+            grid.add (progress);
 
             label = new Gtk.Label ("%d%%".printf ((int) (100 * load))) {
                 halign = Gtk.Align.END
@@ -58,26 +58,29 @@ namespace Usage {
             box = new Gtk.EventBox ();
             box.set_size_request (50, -1);
             box.add (label);
-            add (box);
+            grid.add (box);
+
+            add (grid);
 
             show_all ();
         }
     }
 
-    public class ElementList : Egg.ListBox {
+    public class ElementList : Gtk.ListBox {
 
-        void update_separator (ref Gtk.Widget? separator, Gtk.Widget widget, Gtk.Widget? before) {
-            if (before != null && (before as ElementWidget).is_headline && !(widget as ElementWidget).is_headline) {
-                separator = new Gtk.EventBox ();
-                separator.set_size_request (-1, 40);
-                separator.show ();
+        void update_header (Gtk.ListBoxRow row, Gtk.ListBoxRow? before_row) {
+            if (before_row != null && (before_row as ElementWidget).is_headline && !(row as ElementWidget).is_headline) {
+                var header = new Gtk.EventBox ();
+                header.set_size_request (-1, 40);
+                row.set_header (header);
             } else {
-               separator = null;
+                row.set_header (null);
             }
         }
 
         public ElementList () {
-            set_separator_funcs (update_separator);
+            set_selection_mode (Gtk.SelectionMode.NONE);
+            set_header_func (update_header);
         }
     }
 }
