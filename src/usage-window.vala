@@ -36,23 +36,20 @@ namespace Usage {
             views[UIView.BATTERY] = new BatteryView ();
 
             var content = new Gtk.Grid () { orientation = Gtk.Orientation.VERTICAL };
-            content.add (new Usage.Topbar (this));
+            var header_bar = new Gtk.HeaderBar ();
+            var stack_switcher = new Gtk.StackSwitcher ();
+            header_bar.custom_title = stack_switcher;
 
-            var notebook = new Gtk.Notebook () { show_tabs = false, vexpand = true };
-            var style_context = notebook.get_style_context ();
-            style_context.add_class (Gtk.STYLE_CLASS_VIEW);
-            style_context.add_class ("content-view");
+            content.add (header_bar);
+
+            var stack = new Gtk.Stack ();
 
             foreach (var view in UIView.all ()) {
-                notebook.append_page (views[view].content);
+                stack.add_titled  (views[view].content, views[view].name, views[view].name);
             };
-            content.add (notebook);
+            content.add (stack);
 
-            notify["current-view"].connect (() => {
-                notebook.page = current_view;
-            });
-
-            current_view = UIView.CPU;
+            stack_switcher.stack = stack;
 
             add (content);
             show_all ();

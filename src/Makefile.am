@@ -16,7 +16,6 @@ VALA_SOURCES = \
 	main.vala			\
 	usage-application.vala		\
 	usage-window.vala		\
-	usage-topbar.vala		\
 	usage-view.vala			\
 	usage-cpu-view.vala		\
 	usage-memory-view.vala		\

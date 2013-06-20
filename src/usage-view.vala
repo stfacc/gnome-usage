@@ -10,10 +10,6 @@ namespace Usage {
 
         public Gtk.Widget content { get; protected set; }
 
-        public signal void toggled_mode (Usage.TopbarMode mode);
-
-        public Gtk.Widget topbar_detail_content { get; protected set; }
-
         protected SystemMonitor monitor;
 
         public View () {
