@@ -25,8 +25,6 @@ namespace Usage {
         [GtkChild]
         private Gtk.StackSwitcher stack_switcher;
 
-        public UIView current_view { get; set; }
-
         public View[] views;
 
         [GtkCallback]
@@ -57,7 +55,7 @@ namespace Usage {
             stack_switcher.stack = stack;
 
             foreach (var view in UIView.all ()) {
-                stack.add_titled  (views[view].content, views[view].name, views[view].name);
+                stack.add_titled  (views[view], views[view].name, views[view].name);
             };
 
             show_all ();

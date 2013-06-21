@@ -13,7 +13,7 @@ namespace Usage {
                 column_spacing = 20,
                 margin = 40
             };
-            content = grid;
+            add (grid);
 
             var graph = new GraphWidget () { hexpand = true };
             graph.set_size_request (-1, 150);
@@ -45,13 +45,13 @@ namespace Usage {
 
                 graph.push (monitor.cpu_load);
 
-                List<ElementWidget> widget_list = null;
+                List<ElementRow> widget_list = null;
                 foreach (unowned Process process in monitor.get_processes ()) {
                     var load = process.cpu_load / monitor.cpu_load;
-                    var proc_widget = new ElementWidget (this, process.cmdline, load, false);
+                    var proc_widget = new ElementRow (process.cmdline, load, false);
                     proc_widget.sort_id = (int) (1000 * load);
                     widget_list.insert_sorted (proc_widget, (a, b) => {
-                        return (b as ElementWidget).sort_id - (a as ElementWidget).sort_id;
+                        return (b as ElementRow).sort_id - (a as ElementRow).sort_id;
                     });
                 }
 

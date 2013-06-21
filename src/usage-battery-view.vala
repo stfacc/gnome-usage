@@ -61,7 +61,7 @@ namespace Usage {
                 column_spacing = 20,
                 margin = 40
             };
-            content = grid;
+            add (grid);
 
             var graph = new GraphWidget () { hexpand = true, num_points = 400 };
             graph.set_size_request (-1, 150);

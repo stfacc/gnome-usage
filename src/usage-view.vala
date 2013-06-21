@@ -2,13 +2,9 @@
 
 namespace Usage {
 
-    public abstract class View {
+    public abstract class View : Gtk.Bin {
 
         protected const int MAX_NUM_ELEMENTS = 6;
-
-        public string name { get; protected set; }
-
-        public Gtk.Widget content { get; protected set; }
 
         protected SystemMonitor monitor;
 

@@ -12,7 +12,7 @@ namespace Usage {
                 margin = 40
             };
             grid.set_column_spacing (20);
-            content = grid;
+            add (grid);
 
             var proc_list = new ElementList ();
             grid.attach (proc_list, 0, 0, 1, 1);
@@ -20,16 +20,16 @@ namespace Usage {
             Timeout.add_seconds (1, () => {
                 proc_list.foreach ((widget) => { widget.destroy (); });
 
-                proc_list.add (new ElementWidget (this, _("<b>Memory</b>"), monitor.mem_usage, true));
-                proc_list.add (new ElementWidget (this, _("<b>Swap</b>"), monitor.swap_usage, true));
+                proc_list.add (new ElementRow (_("<b>Memory</b>"), monitor.mem_usage, true));
+                proc_list.add (new ElementRow (_("<b>Swap</b>"), monitor.swap_usage, true));
 
-                List<ElementWidget> widget_list = null;
+                List<ElementRow> widget_list = null;
                 foreach (unowned Process process in monitor.get_processes ()) {
                     var mem = (double) process.mem_usage;
-                    var proc_widget = new ElementWidget (this, process.cmdline, mem, false);
+                    var proc_widget = new ElementRow (process.cmdline, mem, false);
                     proc_widget.sort_id = (int) (1000 * mem);
                     widget_list.insert_sorted (proc_widget, (a, b) => {
-                        return (b as ElementWidget).sort_id - (a as ElementWidget).sort_id;
+                        return (b as ElementRow).sort_id - (a as ElementRow).sort_id;
                     });
                 }
 

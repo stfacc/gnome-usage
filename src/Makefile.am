@@ -25,7 +25,7 @@ VALA_SOURCES = \
 	usage-network-view.vala		\
 	usage-battery-view.vala		\
 	usage-system-monitor.vala	\
-	usage-element-widget.vala	\
+	usage-element-list.vala		\
 	usage-graph-widget.vala		\
 	usage-widgets.vala		\
 	$(NULL)
@@ -57,6 +57,7 @@ gnome_usage_LDADD = \
 
 EXTRA_DIST = \
 	usage.gresource.xml \
+	usage-element-row.ui \
 	usage-window.ui \
 	$(NULL)
 

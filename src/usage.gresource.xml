@@ -2,5 +2,6 @@
 <gresources>
   <gresource prefix="/org/gnome/usage/ui">
     <file preprocess="xml-stripblanks">usage-window.ui</file>
+    <file preprocess="xml-stripblanks">usage-element-row.ui</file>
   </gresource>
 </gresources>
