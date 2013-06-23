@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <!-- interface-requires gtk+ 3.6 -->
+  <template class="UsageStorageView" parent="UsageView">
+    <property name="name" translatable="yes">Storage</property>
+    <child>
+      <object class="GtkScrolledWindow" id="scrolled">
+        <property name="visible">True</property>
+        <child>
+          <object class="UsageStorageList" id="list_box">
+            <property name="visible">True</property>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>

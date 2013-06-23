@@ -21,6 +21,7 @@ VALA_SOURCES = \
 	usage-view.vala			\
 	usage-cpu-view.vala		\
 	usage-memory-view.vala		\
+	usage-storage-list.vala		\
 	usage-storage-view.vala		\
 	usage-network-view.vala		\
 	usage-battery-view.vala		\
@@ -50,6 +51,7 @@ AM_CFLAGS = \
 	$(USAGE_CFLAGS)		\
 	$(NULL)
 
+gnome_usage_LDFLAGS = -export-dynamic
 gnome_usage_LDADD = \
 	-lm				\
 	$(USAGE_LIBS)			\
@@ -58,6 +60,9 @@ gnome_usage_LDADD = \
 EXTRA_DIST = \
 	usage.gresource.xml \
 	usage-element-row.ui \
+	usage-storage-row.ui \
+	usage-storage-view.ui \
+	usage-storage-list.ui \
 	usage-window.ui \
 	$(NULL)
 

@@ -8,8 +8,14 @@ namespace Usage {
 
         protected SystemMonitor monitor;
 
+        public signal void mode_changed (string? title);
+
+        public virtual void go_back () {
+        }
+
         public View () {
             monitor = (GLib.Application.get_default () as Application).monitor;
+            visible = true;
         }
     }
 }

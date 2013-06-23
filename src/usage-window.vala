@@ -21,6 +21,8 @@ namespace Usage {
         [GtkChild]
         private Gtk.HeaderBar header_bar;
         [GtkChild]
+        private Gtk.Button back_button;
+        [GtkChild]
         private Gtk.Stack stack;
         [GtkChild]
         private Gtk.StackSwitcher stack_switcher;
@@ -45,6 +47,17 @@ namespace Usage {
 
             set_default_size (800, 550);
 
+            var back_button_image = back_button.get_child () as Gtk.Image;
+            if (get_direction () == Gtk.TextDirection.LTR) {
+                back_button_image.icon_name = "go-previous-symbolic";
+            } else {
+                back_button_image.icon_name = "go-previous-rtl-symbolic";
+            }
+
+            back_button.clicked.connect (() => {
+                (stack.visible_child as View).go_back ();
+            });
+
             views = new View[UIView.N_VIEWS];
             views[UIView.CPU]     = new CPUView ();
             views[UIView.MEMORY]  = new MemoryView ();
@@ -56,9 +69,19 @@ namespace Usage {
 
             foreach (var view in UIView.all ()) {
                 stack.add_titled  (views[view], views[view].name, views[view].name);
+                views[view].mode_changed.connect ((title) => {
+                    if (title == null) {
+                        header_bar.custom_title = stack_switcher;
+                        back_button.hide ();
+                    } else {
+                        header_bar.custom_title = null;
+                        header_bar.title = title;
+                        back_button.show ();
+                    }
+                });
             };
 
-            show_all ();
+            show ();
         }
     }
 }

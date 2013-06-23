@@ -95,6 +95,8 @@ namespace Usage {
                 return (b as NetworkListRow).sort_id - (a as NetworkListRow).sort_id;
             });
 
+            grid.show_all ();
+
             start_network_analyzer ();
         }
 

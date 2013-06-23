@@ -3,5 +3,8 @@
   <gresource prefix="/org/gnome/usage/ui">
     <file preprocess="xml-stripblanks">usage-window.ui</file>
     <file preprocess="xml-stripblanks">usage-element-row.ui</file>
+    <file preprocess="xml-stripblanks">usage-storage-row.ui</file>
+    <file preprocess="xml-stripblanks">usage-storage-list.ui</file>
+    <file preprocess="xml-stripblanks">usage-storage-view.ui</file>
   </gresource>
 </gresources>

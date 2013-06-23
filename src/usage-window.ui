@@ -12,6 +12,24 @@
           </object>
         </child>
         <child>
+          <object class="GtkButton" id="back_button">
+            <property name="valign">center</property>
+            <property name="can_focus">True</property>
+            <style>
+              <class name="image-button"/>
+            </style>
+            <child>
+              <object class="GtkImage" id="back_button_image">
+                <property name="visible">True</property>
+                <property name="icon_size">1</property>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="pack_type">start</property>
+          </packing>
+        </child>
+        <child>
           <object class="GtkSeparator" id="close_button_separator">
             <property name="visible">True</property>
             <property name="orientation">vertical</property>

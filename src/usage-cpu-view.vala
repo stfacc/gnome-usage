@@ -62,6 +62,8 @@ namespace Usage {
 
                 return true;
             });
+
+            grid.show_all ();
         }
     }
 }

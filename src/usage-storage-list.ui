@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <!-- interface-requires gtk+ 3.6 -->
+  <template class="UsageStorageList" parent="GtkListBox">
+    <property name="visible">True</property>
+    <property name="selection_mode">none</property>
+  </template>
+</interface>
