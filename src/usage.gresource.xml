@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
-  <gresource prefix="/org/gnome/usage/ui">
-    <file preprocess="xml-stripblanks">usage-window.ui</file>
-    <file preprocess="xml-stripblanks">usage-element-row.ui</file>
-    <file preprocess="xml-stripblanks">usage-storage-row.ui</file>
-    <file preprocess="xml-stripblanks">usage-storage-list.ui</file>
-    <file preprocess="xml-stripblanks">usage-storage-view.ui</file>
+  <gresource prefix="/org/gnome/usage">
+    <file preprocess="xml-stripblanks">ui/usage-window.ui</file>
+    <file preprocess="xml-stripblanks">ui/usage-element-row.ui</file>
+    <file preprocess="xml-stripblanks">ui/usage-storage-row.ui</file>
+    <file preprocess="xml-stripblanks">ui/usage-storage-list.ui</file>
+    <file preprocess="xml-stripblanks">ui/usage-storage-view.ui</file>
   </gresource>
 </gresources>

@@ -45,8 +45,8 @@ gnome_usage_VALAFLAGS = \
 	--gresources=usage.gresource.xml \
 	$(NULL)
 
-usage-resources.c: usage.gresource.xml $(shell glib-compile-resources --generate-dependencies --sourcedir=$(srcdir) $(srcdir)/usage.gresource.xml)
-	$(AM_V_GEN) glib-compile-resources --target=$@ --sourcedir=$(srcdir) --generate-source $<
+usage-resources.c: usage.gresource.xml $(shell glib-compile-resources --generate-dependencies --sourcedir=$(srcdir)/resources $(srcdir)/usage.gresource.xml)
+	$(AM_V_GEN) glib-compile-resources --target=$@ --sourcedir=$(srcdir)/resources --generate-source $<
 
 AM_CFLAGS = \
 	$(USAGE_CFLAGS)		\
