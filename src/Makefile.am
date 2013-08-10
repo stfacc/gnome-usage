@@ -39,6 +39,7 @@ gnome_usage_SOURCES = \
 	$(NULL)
 
 gnome_usage_VALAFLAGS = \
+	--target-glib=2.38 \
 	--pkg gtk+-3.0	\
 	--pkg posix	\
 	--gresources=usage.gresource.xml \
