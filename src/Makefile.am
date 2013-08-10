@@ -2,11 +2,7 @@ NULL =
 MAINTAINERCLEANFILES = *.stamp
 
 AM_CPPFLAGS = \
-	-DPREFIX=\""$(prefix)"\" 				\
 	-DGETTEXT_PACKAGE=\""$(GETTEXT_PACKAGE)"\" 		\
-	-DSYSCONFDIR=\""$(sysconfdir)"\"			\
-	-DLIBDIR=\""$(libdir)"\"				\
-	-DDATADIR=\""$(datadir)"\"				\
 	-DGNOMELOCALEDIR=\""$(prefix)/$(DATADIRNAME)/locale"\" 	\
 	$(NULL)
 

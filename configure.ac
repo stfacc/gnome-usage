@@ -14,7 +14,7 @@ AC_CANONICAL_TARGET
 
 AM_INIT_AUTOMAKE([1.11 foreign tar-ustar dist-xz no-dist-gzip -Wno-portability])
 AM_MAINTAINER_MODE([enable])
-m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
+AM_SILENT_RULES([yes])
 
 # i18n stuff
 IT_PROG_INTLTOOL(0.40.0)
@@ -28,7 +28,6 @@ AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE",[The name of the gettext d
 
 AC_PROG_CC
 AC_PROG_INSTALL
-AC_PROG_MAKE_SET
 AM_PROG_VALAC([0.21.1])
 PKG_PROG_PKG_CONFIG([0.22])
 
