@@ -29,19 +29,6 @@ namespace Usage {
 
         public View[] views;
 
-        [GtkCallback]
-        private void close_button_clicked (Gtk.Button button)
-        {
-            Gdk.Event event;
-
-            event = new Gdk.Event (Gdk.EventType.DELETE);
-
-            event.any.window = this.get_window ();
-            event.any.send_event = 1;
-
-            Gtk.main_do_event (event);
-        }
-
         public Window (Application app) {
             Object (application: app);
 
