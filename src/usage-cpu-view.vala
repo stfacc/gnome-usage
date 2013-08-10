@@ -47,7 +47,7 @@ namespace Usage {
 
                 List<ElementRow> widget_list = null;
                 foreach (unowned Process process in monitor.get_processes ()) {
-                    var load = process.cpu_load / monitor.cpu_load;
+                    var load = process.cpu_load;
                     var proc_widget = new ElementRow (process.cmdline, load, false);
                     proc_widget.sort_id = (int) (1000 * load);
                     widget_list.insert_sorted (proc_widget, (a, b) => {
