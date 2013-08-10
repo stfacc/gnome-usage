@@ -80,7 +80,7 @@ namespace Usage {
 
                         GTop.ProcMem proc_mem;
                         GTop.get_proc_mem (out proc_mem, process.pid);
-                        process.mem_usage = (double) proc_mem.resident / mem.total;
+                        process.mem_usage = (double) (proc_mem.resident - proc_mem.share) / mem.total;
                     }
                 }
 
