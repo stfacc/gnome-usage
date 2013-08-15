@@ -56,6 +56,7 @@ gnome_usage_LDADD = \
 
 EXTRA_DIST = \
 	usage.gresource.xml \
+	usage-app-menu.ui \
 	usage-element-row.ui \
 	usage-storage-row.ui \
 	usage-storage-view.ui \
