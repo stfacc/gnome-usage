@@ -38,10 +38,10 @@ gnome_usage_VALAFLAGS = \
 	--target-glib=2.38 \
 	--pkg gtk+-3.0	\
 	--pkg posix	\
-	--gresources=usage.gresource.xml \
+	--gresources=$(srcdir)/resources/usage.gresource.xml \
 	$(NULL)
 
-usage-resources.c: usage.gresource.xml $(shell glib-compile-resources --generate-dependencies --sourcedir=$(srcdir)/resources $(srcdir)/usage.gresource.xml)
+usage-resources.c: $(srcdir)/resources/usage.gresource.xml $(shell glib-compile-resources --generate-dependencies --sourcedir=$(srcdir)/resources $(srcdir)/resources/usage.gresource.xml)
 	$(AM_V_GEN) glib-compile-resources --target=$@ --sourcedir=$(srcdir)/resources --generate-source $<
 
 AM_CFLAGS = \
