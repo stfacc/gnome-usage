@@ -7,6 +7,6 @@ src/usage-memory-view.vala
 src/usage-network-view.vala
 src/usage-storage-view.vala
 src/usage-window.vala
-src/resources/usage-app-menu.ui
-src/resources/usage-storage-view.ui
-src/resources/usage-window.ui
+src/resources/ui/usage-app-menu.ui
+src/resources/ui/usage-storage-view.ui
+src/resources/ui/usage-window.ui
