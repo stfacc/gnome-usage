@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-usage 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-15 18:40+0300\n"
-"PO-Revision-Date: 2013-08-15 19:51+0300\n"
+"POT-Creation-Date: 2013-08-16 03:05+0300\n"
+"PO-Revision-Date: 2013-08-16 03:09+0300\n"
 "Last-Translator: Yosef Or Boczko <yoseforb@gmail.com>\n"
 "Language-Team: עברית <>\n"
 "Language: he\n"
@@ -19,11 +19,11 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n>2||n==0) ? 1 :2;\n"
 "X-Generator: Gtranslator 2.91.6\n"
 
-#: ../data/gnome-usage.desktop.in.in.h:1
+#: ../data/gnome-usage.desktop.in.in.h:1 ../src/usage-window.vala:89
 msgid "Usage"
 msgstr "שימוש"
 
-#: ../data/gnome-usage.desktop.in.in.h:2
+#: ../data/gnome-usage.desktop.in.in.h:2 ../src/usage-window.vala:92
 msgid "Resource usage viewer"
 msgstr "מציג שימוש במשאבים"
 
@@ -59,9 +59,6 @@ msgstr "<b>זיכרון</b>"
 msgid "<b>Swap</b>"
 msgstr "<b>תחלופה</b>"
 
-msgid "Storage"
-msgstr "אחסון"
-
 #: ../src/usage-network-view.vala:68
 msgid "Network"
 msgstr "רשת"
@@ -88,7 +85,7 @@ msgstr "<b>סך הכל</b>"
 
 #: ../src/usage-storage-view.vala:14
 msgid "Joel's computer"
-msgstr "המחשב של יוסף אור בוצ׳קו"
+msgstr "המחשב של יואל"
 
 #: ../src/usage-storage-view.vala:22 ../src/usage-storage-view.vala:104
 msgid "Photos"
@@ -109,3 +106,10 @@ msgstr "מוזיקה"
 #: ../src/usage-storage-view.vala:118
 msgid "Videos"
 msgstr "וידאו"
+
+#: ../src/usage-window.vala:97
+msgid "translator-credits"
+msgstr "יוסף אור בוצ׳קו <yosefor3@walla.com>"
+
+msgid "Storage"
+msgstr "אחסון"
