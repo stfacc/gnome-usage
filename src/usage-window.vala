@@ -59,6 +59,7 @@ namespace Usage {
             views[UIView.BATTERY] = new BatteryView ();
 
             stack_switcher.stack = stack;
+            stack_switcher.show ();
 
             foreach (var view in UIView.all ()) {
                 stack.add_titled  (views[view], views[view].name, views[view].name);
