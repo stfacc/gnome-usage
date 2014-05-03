@@ -1,0 +1,115 @@
+# Hebrew translations for gnome-usage package.
+# Copyright (C) 2013 THE gnome-usage'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the gnome-usage package.
+# יוסף אור בוצ׳קו <yoseforb@gmail.com>, 2013.
+# Yosef Or Boczko <yoseforb@gmail.com>, 2013.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gnome-usage 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-08-16 03:05+0300\n"
+"PO-Revision-Date: 2013-08-16 03:09+0300\n"
+"Last-Translator: Yosef Or Boczko <yoseforb@gmail.com>\n"
+"Language-Team: עברית <>\n"
+"Language: he\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n>2||n==0) ? 1 :2;\n"
+"X-Generator: Gtranslator 2.91.6\n"
+
+#: ../data/gnome-usage.desktop.in.in.h:1 ../src/usage-window.vala:89
+msgid "Usage"
+msgstr "שימוש"
+
+#: ../data/gnome-usage.desktop.in.in.h:2 ../src/usage-window.vala:92
+msgid "Resource usage viewer"
+msgstr "מציג שימוש במשאבים"
+
+#: ../data/gnome-usage.desktop.in.in.h:3
+msgid "Show the current resource usage of the system"
+msgstr "הצגת השימוש הנוכחי במשאבי המערכת"
+
+#: ../src/usage-battery-view.vala:47
+msgid "Battery"
+msgstr "סוללה"
+
+#: ../src/usage-battery-view.vala:70
+msgid "Battery charge"
+msgstr "זמן סוללה"
+
+#: ../src/usage-cpu-view.vala:8
+msgid "CPU"
+msgstr "מעבד"
+
+#: ../src/usage-cpu-view.vala:22
+msgid "Total CPU load"
+msgstr "סך הכל עומס מעבד"
+
+#: ../src/usage-memory-view.vala:8
+msgid "Memory"
+msgstr "זיכרון"
+
+#: ../src/usage-memory-view.vala:23
+msgid "<b>Memory</b>"
+msgstr "<b>זיכרון</b>"
+
+#: ../src/usage-memory-view.vala:24
+msgid "<b>Swap</b>"
+msgstr "<b>תחלופה</b>"
+
+#: ../src/usage-network-view.vala:68
+msgid "Network"
+msgstr "רשת"
+
+#: ../src/usage-network-view.vala:82
+msgid "Received network traffic"
+msgstr "תעבורת רשת"
+
+#: ../src/usage-network-view.vala:138
+msgid "<b>Received (kb/s)</b>"
+msgstr "‏<b>מתקבל (ק״ב/שנייה)</b>"
+
+#: ../src/usage-network-view.vala:138
+msgid "<b>Sent (kb/s)</b>"
+msgstr "‏<b>נשלח (ק״ב/שנייה)</b>"
+
+#: ../src/usage-network-view.vala:159
+msgid "Unknown traffic"
+msgstr "תעבורה לא ידועה"
+
+#: ../src/usage-network-view.vala:162
+msgid "<b>Total</b>"
+msgstr "<b>סך הכל</b>"
+
+#: ../src/usage-storage-view.vala:14
+msgid "Joel's computer"
+msgstr "המחשב של יואל"
+
+#: ../src/usage-storage-view.vala:22 ../src/usage-storage-view.vala:104
+msgid "Photos"
+msgstr "תמונות"
+
+#: ../src/usage-storage-view.vala:29 ../src/usage-storage-view.vala:111
+msgid "Documents"
+msgstr "מסמכים"
+
+#: ../src/usage-storage-view.vala:36 ../src/usage-storage-view.vala:90
+msgid "Trash"
+msgstr "אשפה"
+
+#: ../src/usage-storage-view.vala:97
+msgid "Music"
+msgstr "מוזיקה"
+
+#: ../src/usage-storage-view.vala:118
+msgid "Videos"
+msgstr "וידאו"
+
+#: ../src/usage-window.vala:97
+msgid "translator-credits"
+msgstr "יוסף אור בוצ׳קו <yosefor3@walla.com>"
+
+msgid "Storage"
+msgstr "אחסון"

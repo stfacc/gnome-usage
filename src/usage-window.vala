@@ -18,6 +18,10 @@ namespace Usage {
     [GtkTemplate (ui = "/org/gnome/usage/ui/usage-window.ui")]
     public class Window : Gtk.ApplicationWindow {
 
+        private const GLib.ActionEntry[] action_entries = {
+            { "about", on_about_activate }
+        };
+
         [GtkChild]
         private Gtk.HeaderBar header_bar;
         [GtkChild]
@@ -31,6 +35,8 @@ namespace Usage {
 
         public Window (Application app) {
             Object (application: app);
+
+            add_action_entries (action_entries, this);
 
             set_default_size (800, 550);
 
@@ -53,6 +59,7 @@ namespace Usage {
             views[UIView.BATTERY] = new BatteryView ();
 
             stack_switcher.stack = stack;
+            stack_switcher.show ();
 
             foreach (var view in UIView.all ()) {
                 stack.add_titled  (views[view], views[view].name, views[view].name);
@@ -69,6 +76,27 @@ namespace Usage {
             };
 
             show ();
+        }
+
+        private void on_about_activate () {
+            const string copyright = "Copyright \xc2\xa9 2013 Stefano Facchini";
+
+            const string authors[] = {
+                "Stefano Facchini <stefano.facchini@gmail.com>",
+                null
+            };
+
+            Gtk.show_about_dialog (this,
+                                   "program-name", _("Usage"),
+                                   "logo-icon-name", "gnome-usage",
+                                   "version", Config.VERSION,
+                                   "comments", _("Resource usage viewer"),
+                                   "copyright", copyright,
+                                   "authors", authors,
+                                   "license-type", Gtk.License.GPL_2_0,
+                                   "wrap-license", false,
+                                   "translator-credits", _("translator-credits"),
+                                   null);
         }
     }
 }
